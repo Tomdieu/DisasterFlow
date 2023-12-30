@@ -17,7 +17,9 @@ spec:
     spec:
       containers:
         - name: account
-          image: account_service
+          image: account:latest
           imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8000
       restartPolicy: Always
       

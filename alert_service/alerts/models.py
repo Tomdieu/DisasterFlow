@@ -8,7 +8,7 @@ class Location(models.Model):
     lat = models.FloatField(default=0.0, null=False, blank=False)
     lng = models.FloatField(default=0.0, null=False, blank=False)
     zip_code = models.CharField(max_length=255, null=True, blank=True)
-    locality = models.CharField(max_length=255, null=True, blank=True)
+    locality = models.CharField(max_length=255, null=False, blank=False)
 
     def __str__(self):
         return f"{self.lat} - {self.lng}"
@@ -25,23 +25,6 @@ class User(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
 
-    # SPECIALIZATION_CHOICES = [
-    #     ("Firefighting", "Firefighting"),
-    #     ("Law Enforcement", "Law Enforcement"),
-    #     ("Emergency Medical Services (EMS)", "Emergency Medical Services (EMS)"),
-    #     ("Search and Rescue", "Search and Rescue"),
-    #     (
-    #         "Hazardous Materials (HazMat) Response",
-    #         "Hazardous Materials (HazMat) Response",
-    #     ),
-    #     ("Technical Rescue", "Technical Rescue"),
-    #     ("Urban Search and Rescue (USAR)", "Urban Search and Rescue (USAR)"),
-    #     ("Critical Incident Response", "Critical Incident Response"),
-    #     ("Medical Specialization", "Medical Specialization"),
-    #     ("Disaster Response and Recovery", "Disaster Response and Recovery"),
-    #     ("Communications and Coordination", "Communications and Coordination"),
-    #     ("Aviation Rescue", "Aviation Rescue"),
-    # ]
 
     def __str__(self):
         return f"{self.username} - {self.type}"
@@ -78,8 +61,8 @@ class UserReport(models.Model):
     description = models.TextField()
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
-    impact = models.CharField(max_length=255, choices=IMPACT)
-    urgency = models.CharField(max_length=255, choices=URGENCY)
+    impact = models.CharField(max_length=255, choices=IMPACT,default="low")
+    urgency = models.CharField(max_length=255, choices=URGENCY,default="low")
 
     def __str__(self) -> str:
         return f"{self.title} - {self.user.username}"

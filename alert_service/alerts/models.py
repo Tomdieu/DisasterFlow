@@ -31,7 +31,7 @@ class User(models.Model):
 
 
 class Profile(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     skills = models.CharField(max_length=255)
     interests = models.CharField(max_length=255)

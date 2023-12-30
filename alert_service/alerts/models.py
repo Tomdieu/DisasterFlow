@@ -42,34 +42,7 @@ class Profile(models.Model):
     def __str__(self) -> str:
         return f"{self.user.username} - {self.skills}"
 
-
-class UserReport(models.Model):
-    IMPACT = [
-        ("low", "Low"),
-        ("moderate", "Moderate"),
-        ("high", "High"),
-    ]
-
-    URGENCY = [
-        ("low", "Low"),
-        ("moderate", "Moderate"),
-        ("high", "High"),
-    ]
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-    location = models.ForeignKey(Location, on_delete=models.CASCADE)
-    timestamp = models.DateTimeField(auto_now_add=True)
-    impact = models.CharField(max_length=255, choices=IMPACT,default="low")
-    urgency = models.CharField(max_length=255, choices=URGENCY,default="low")
-
-    def __str__(self) -> str:
-        return f"{self.title} - {self.user.username}"
-
-
-class Alert(models.Model):
-    TYPES = {
+TYPES = {
         "Natural Disasters": {
             "earthquakes": "Earthquakes",
             "floods": "Floods",
@@ -98,6 +71,35 @@ class Alert(models.Model):
             "snowstorms/blizzards": "Snowstorms/Blizzards",
         },
     }
+
+class UserReport(models.Model):
+    IMPACT = [
+        ("low", "Low"),
+        ("moderate", "Moderate"),
+        ("high", "High"),
+    ]
+
+    URGENCY = [
+        ("low", "Low"),
+        ("moderate", "Moderate"),
+        ("high", "High"),
+    ]
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    type = models.CharField(max_length=255, choices=TYPES)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    impact = models.CharField(max_length=255, choices=IMPACT,default="low")
+    urgency = models.CharField(max_length=255, choices=URGENCY,default="low")
+
+    def __str__(self) -> str:
+        return f"{self.title} - {self.user.username}"
+
+
+class Alert(models.Model):
+    
 
     SEVERITY = [
         ("low", "Low"),

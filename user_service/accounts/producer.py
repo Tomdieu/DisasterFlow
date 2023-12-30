@@ -8,8 +8,8 @@ from django.conf import settings
 
 def publish(method: str, body: Any, routing_keys: list[str]):
     try:
-        credentials = pika.PlainCredentials(settings.env('RABBIT_MQ_USERNAME'), settings.env('RABBIT_MQ_PASSWORD'))
-        paramters = pika.ConnectionParameters(host=settings.env("RABBIT_MQ_HOST"), port=5672, virtual_host="/",
+        credentials = pika.PlainCredentials(settings.RABBIT_MQ_USERNAME, settings.RABBIT_MQ_PASSWORD)
+        paramters = pika.ConnectionParameters(host=settings.RABBIT_MQ_HOST, port=5672, virtual_host="/",
                                               credentials=credentials)
         connection = pika.BlockingConnection(paramters)
         channel = connection.channel()

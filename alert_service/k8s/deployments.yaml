@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: alert
+  labels:
+    app: alert
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: alert
+  template:
+    metadata:
+      name: alert
+      labels:
+        app: alert
+    spec:
+      containers:
+        - name: alert
+          image: alert:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+          - containerPort: 8001
+      restartPolicy: Always

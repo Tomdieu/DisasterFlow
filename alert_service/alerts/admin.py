@@ -13,8 +13,8 @@ class LocationAdmin(admin.ModelAdmin):
 @admin.register(Alert)
 class AlertAdmin(admin.ModelAdmin):
 
-    list_display = ['id', 'user', 'title', 'description', 'location', 'created_at', 'updated_at']
-    list_filter = ['user', 'location', 'created_at', 'updated_at']
+    list_display = ['id', 'title', 'description', 'location', 'timestamp']
+    list_filter = ['location', 'timestamp',]
 
 @admin.register(UserReport)
 class UserReportAdmin(admin.ModelAdmin):

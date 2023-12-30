@@ -19,8 +19,8 @@ class AlertAdmin(admin.ModelAdmin):
 @admin.register(UserReport)
 class UserReportAdmin(admin.ModelAdmin):
 
-    list_display = ['id', 'user', 'title', 'description', 'location', 'impact', 'urgency', 'created_at', 'updated_at']
-    list_filter = ['user', 'location', 'impact', 'urgency', 'created_at', 'updated_at']
+    list_display = ['id', 'user', 'title', 'description', 'location', 'impact', 'urgency','timestamp']
+    list_filter = ['user', 'location', 'impact', 'urgency', 'timestamp']
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):

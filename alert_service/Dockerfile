@@ -30,6 +30,6 @@ COPY . .
 RUN python manage.py makemigrations && python manage.py migrate
 
 # Collect static files
-RUN /opt/venv/bin/python manage.py collectstatic --noinput
+# RUN /opt/venv/bin/python manage.py collectstatic --noinput
 
 CMD ["python","manage.py","runserver","0.0.0.0:8001"]

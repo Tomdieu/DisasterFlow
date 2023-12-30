@@ -10,6 +10,15 @@ from accounts.patterns import Visitor
 
 # Create your models here.
 
+class Location(models.Model):
+    lat = models.FloatField(default=0.0, null=False, blank=False)
+    lng = models.FloatField(default=0.0, null=False, blank=False)
+    zip_code = models.CharField(max_length=255, null=True, blank=True)
+    locality = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.lat} - {self.lng}"
+
 class User(AbstractUser):
     GENDER_CHOICES = [
         ("M", "Male"),
@@ -25,7 +34,7 @@ class User(AbstractUser):
     email = models.EmailField(_("email address"), unique=True)
 
     type = models.CharField(max_length=255, choices=Types.choices, default=Types.CITIZEN)
-    gender = models.CharField(max_length=10,choices=GENDER_CHOICES)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
 
     date_of_birth = models.DateField(null=True, blank=True)
     profile_image = models.ImageField(upload_to="profile_images/", null=True, blank=True)
@@ -85,11 +94,31 @@ class Citizen(User):
     def accept(self, visitor: Visitor):
         visitor.visit_citizen(self)
 
+SPECIALIZATION_CHOICES = [
+        ("Firefighting", "Firefighting"),
+        ("Law Enforcement", "Law Enforcement"),
+        ("Emergency Medical Services (EMS)", "Emergency Medical Services (EMS)"),
+        ("Search and Rescue", "Search and Rescue"),
+        (
+            "Hazardous Materials (HazMat) Response",
+            "Hazardous Materials (HazMat) Response",
+        ),
+        ("Technical Rescue", "Technical Rescue"),
+        ("Urban Search and Rescue (USAR)", "Urban Search and Rescue (USAR)"),
+        ("Critical Incident Response", "Critical Incident Response"),
+        ("Medical Specialization", "Medical Specialization"),
+        ("Disaster Response and Recovery", "Disaster Response and Recovery"),
+        ("Communications and Coordination", "Communications and Coordination"),
+        ("Aviation Rescue", "Aviation Rescue"),
+    ]
 
 class EmergencyResponder(User):
+
+
     emergency_contact_number = models.CharField(max_length=20, blank=True, null=True)
     emergency_contact_person = models.CharField(max_length=255, blank=True, null=True)
     is_verified = models.BooleanField(default=False)
+    specialization = models.CharField(max_length=255, choices=SPECIALIZATION_CHOICES, null=True, blank=True)
 
     class Meta:
         pass
@@ -107,14 +136,16 @@ class EmergencyResponder(User):
 
 
 class EmergencyResponseTeam(models.Model):
-    emergency_responder = models.OneToOneField(EmergencyResponder, on_delete=models.CASCADE, related_name="team")
+
     team_name = models.CharField(max_length=50)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name="team_location")
     members = models.ManyToManyField(EmergencyResponder)
+    specialization = models.CharField(max_length=255, choices=SPECIALIZATION_CHOICES, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.OneToOneField(EmergencyResponder, on_delete=models.CASCADE, related_name="team")
 
     def __str__(self):
         return f"Emergency Response Team: {self.team_name}"
-
 
 
 class Event(models.Model):

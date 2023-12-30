@@ -37,7 +37,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -90,7 +89,6 @@ WSGI_APPLICATION = "user_service.wsgi.application"
 
 AUTH_USER_MODEL = "accounts.User"
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -100,8 +98,6 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -121,7 +117,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -133,7 +128,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
@@ -143,7 +137,6 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
 
 # CORS
 
@@ -162,18 +155,24 @@ REST_FRAMEWORK = {
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
 }
 
-
 REDOC_SETTINGS = {
     "LAZY_RENDERING": False,
 }
 
+# RABBIT MQ CONFIGURATIONS
+RABBIT_MQ_USERNAME = env('RABBIT_MQ_USERNAME')
+RABBIT_MQ_PASSWORD = env('RABBIT_MQ_PASSWORD')
+RABBIT_MQ_HOST = env('RABBIT_MQ_HOST')
+
 # IPINFO_TOKEN=
 IPINFO_SETTINGS = {
-  'cache_options': {
-      'ttl':30,
-      'maxsize': 128
-  },
-  'countries_file': 'custom_countries.json'
+    'cache_options': {
+        'ttl': 30,
+        'maxsize': 128
+    },
+    'countries_file': 'custom_countries.json'
 }
+
 IPINFO_FILTER = lambda request: request.scheme == 'http'
+
 # IPINFO_IP_SELECTOR = my_custom_ip_selector_implementation

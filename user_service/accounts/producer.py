@@ -24,7 +24,7 @@ def publish(method: str, body: Any, routing_keys: list[str]):
         body = json.dumps(data).encode('utf-8')
 
         for routing_key in routing_keys:
-            channel.basic_publish(exchange="amq.topic", routing_key=routing_key, body=json.dumps(data).encode('utf-8'),
+            channel.basic_publish(exchange="amq.topic", routing_key=routing_key, body=body,
                                   properties=properties)
         connection.close()
     except Exception as e:

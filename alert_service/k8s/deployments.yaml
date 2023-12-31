@@ -21,11 +21,52 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: alert-config
+            - secretRef:
+                name: geoapify-secret
+            - secretRef:
+                name: mapbox-secret
           resources:
             limits:
-              memory: "512Mi"  # Adjust based on your application's needs
-              cpu: "0.5"       # Adjust based on your application's needs
+              memory: "512Mi"
+              cpu: "0.5"
             requests:
-              memory: "256Mi"  # Adjust based on your application's needs
-              cpu: "0.1"       # Adjust based on your application's needs
+              memory: "256Mi"
+              cpu: "0.1"    
+        - name: consumer
+          image: alert:latest
+          command: ['python',"-u",'consumer.py']
+          restartPolicy: Always
+          volumeMounts:
+            - name: share-volume
+              mountPath: /alert_service
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "0.5"     
+            requests:
+              memory: "256Mi"
+              cpu: "0.1"     
+      volumes:
+        - name: share-volume
+          hostPath:
+            path: /alert_service
+            type: DirectoryOrCreate
       restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: alert
+  labels:
+    app: alert
+spec:
+  selector:
+    app: alert
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+  type: ClusterIP

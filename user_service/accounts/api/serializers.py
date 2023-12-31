@@ -120,7 +120,7 @@ class UserSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         context = self.context
         if isinstance(instance, Citizen):
-            return CitizenSerializer(instance, context=context).data
+            return CitizenListSerializer(instance, context=context).data
         elif isinstance(instance, EmergencyResponder):
-            return EmergencyResponderSerializer(instance, context=context).data
+            return EmergencyResponderListSerializer(instance, context=context).data
         return super().to_representation(instance)

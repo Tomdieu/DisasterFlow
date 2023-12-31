@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zookeeper
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zookeeper
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      containers:
+      - name: zookeeper
+        image: wurstmeister/zookeeper:3.4.6
+        ports:
+        - containerPort: 2181
+        resources:
+          limits:
+            memory: "512Mi"   # Set your memory limit
+            cpu: "0.5"        # Set your CPU limit
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+spec:
+  ports:
+    - port: 2181
+  selector:
+    app: zookeeper

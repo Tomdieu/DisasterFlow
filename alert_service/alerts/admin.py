@@ -1,5 +1,5 @@
 from django.contrib import admin
-
+from leaflet.admin import LeafletGeoAdmin
 # Register your models here.
 
 from .models import Alert, Location, Profile, User, UserReport
@@ -16,7 +16,7 @@ class ReadOnlyModelAdmin(admin.ModelAdmin):
 
 
 @admin.register(Location)
-class LocationAdmin(admin.ModelAdmin):
+class LocationAdmin(admin.ModelAdmin,LeafletGeoAdmin):
 
     list_display = ['point', 'address', 'country', 'city', 'state']
     

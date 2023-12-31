@@ -9,6 +9,6 @@ spec:
     app: alert
   ports:
     - protocol: TCP
-      port: 8001
-      targetPort: 8001
+      port: 8000
+      targetPort: 8000
   type: ClusterIP

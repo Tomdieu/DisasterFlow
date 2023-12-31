@@ -20,7 +20,7 @@ spec:
           image: alert:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8001
+            - containerPort: 8000
           resources:
             limits:
               memory: "512Mi"  # Adjust based on your application's needs

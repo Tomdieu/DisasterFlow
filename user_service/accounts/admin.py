@@ -1,12 +1,17 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Profile, Event, Citizen, EmergencyResponder, EmergencyResponseTeam
+from .models import Profile, Event, Citizen, EmergencyResponder, EmergencyResponseTeam, Location
 
 from django.contrib.auth import get_user_model
 
 # Register your models here.
 
 User = get_user_model()
+
+
+class LocationInline(admin.StackedInline):
+    extra = 1
+    model = Location
 
 
 class ProfileInline(admin.StackedInline):
@@ -68,7 +73,7 @@ class ProfileInline(admin.StackedInline):
 @admin.register(Citizen)
 class CitizenAdmin(BaseUserAdmin):
     fieldsets = (
-        (None, {"fields": ("email", "password", "home_address",)}),
+        (None, {"fields": ("email", "password",)}),
         (
             "Personal info",
             {"fields": ("username", "phone_number", "first_name", "last_name", "date_of_birth", "profile_image")},
@@ -99,7 +104,6 @@ class CitizenAdmin(BaseUserAdmin):
                     "phone_number",
                     "date_of_birth",
                     "profile_image",
-                    "home_address",
                     "password1",
                     "password2",
                 ),
@@ -110,6 +114,7 @@ class CitizenAdmin(BaseUserAdmin):
     search_fields = ("username", "first_name", "last_name", "email", "phone_number")
     list_display = ("username", "email", "first_name", "last_name", "is_staff")
     list_filter = ("is_staff", "is_superuser", "is_active", "groups")
+    inlines = [ProfileInline, LocationInline]
 
 
 @admin.register(EmergencyResponder)
@@ -160,6 +165,7 @@ class EmergencyResponderAdmin(BaseUserAdmin):
     search_fields = ("username", "first_name", "last_name", "email", "phone_number")
     list_display = ("username", "email", "first_name", "last_name", "is_staff")
     list_filter = ("is_staff", "is_superuser", "is_active", "groups")
+    inlines = [ProfileInline, LocationInline]
 
 
 admin.site.register(EmergencyResponseTeam)
@@ -169,3 +175,8 @@ admin.site.register(Event)
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'location', 'skills', 'last_activity', 'is_online']
+
+
+@admin.register(Location)
+class LocationAdmin(admin.ModelAdmin):
+    list_display = ['user', 'lat', 'lng', 'address', 'country', 'city', 'state']

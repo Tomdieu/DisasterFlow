@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework import fields
-from accounts.models import Profile, Citizen, EmergencyResponder, EmergencyResponseTeam, User
+from accounts.models import Profile, Citizen, EmergencyResponder, EmergencyResponseTeam, User,Location
 
 
 class UpdatePasswordSerializer(serializers.Serializer):
@@ -51,6 +51,25 @@ class CitizenListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Citizen
         fields = ['username', 'email', 'type', 'date_of_birth', 'profile_image', 'phone_number', "home_address"]
+
+
+class EmergencyResponderCreateSerializer(serializers.ModelSerializer):
+
+    profile = ProfileSerializer()
+    class Meta:
+        model = EmergencyResponder
+        fields = ['username', 'email', 'type', 'date_of_birth', 'profile_image', 'phone_number',
+                  "emergency_contact_number", "emergency_contact_person","profile"]
+
+        extra_kwargs = {
+            "password": {
+                "write_only": True,
+                "required": True,
+            },
+            "email": {
+                "required": True,
+            },
+        }
 
 
 class EmergencyResponderSerializer(serializers.ModelSerializer):
@@ -116,6 +135,12 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = '__all__'
+
+        extra_kwargs = {
+            "password": {
+                "write_only": True,
+            }
+        }
 
     def to_representation(self, instance):
         context = self.context

@@ -10,16 +10,6 @@ from accounts.patterns import Visitor
 
 # Create your models here.
 
-class Location(models.Model):
-    lat = models.FloatField(default=0.0, null=False, blank=False)
-    lng = models.FloatField(default=0.0, null=False, blank=False)
-    zip_code = models.CharField(max_length=255, null=True, blank=True)
-    locality = models.CharField(max_length=255, null=True, blank=True)
-
-    def __str__(self):
-        return f"{self.lat} - {self.lng}"
-
-
 class User(AbstractUser):
     GENDER_CHOICES = [
         ("M", "Male"),
@@ -61,9 +51,22 @@ class User(AbstractUser):
         return f"{self.username} - {self.type}"
 
 
+class Location(models.Model):
+    lat = models.FloatField(default=0.0, null=False, blank=False)
+    lng = models.FloatField(default=0.0, null=False, blank=False)
+    address = models.CharField(max_length=255, null=True, blank=True)
+    country = models.CharField(max_length=100, null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    state = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.lat} - {self.lng}"
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name="profile")
-    location = models.CharField(max_length=255, null=True, blank=True)
+    # location = models.ForeignKey(Location,on_delete=models.CASCADE,null=True,blank=True)
+    location = models.CharField(max_length=255, blank=True, null=True)
     skills = models.CharField(help_text=_("each skill Should be separated by `,`"), max_length=255, null=True,
                               blank=True)
     interest = models.TextField(null=True, blank=True)
@@ -78,9 +81,20 @@ class Profile(models.Model):
         return f"{self.user} - profile"
 
 
-class Citizen(User):
-    home_address = models.CharField(max_length=255, blank=True, null=True)
+class Location(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name="location")
+    lat = models.FloatField(default=0.0, null=False, blank=False)
+    lng = models.FloatField(default=0.0, null=False, blank=False)
+    address = models.CharField(max_length=255, null=True, blank=True)
+    country = models.CharField(max_length=100, null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    state = models.CharField(max_length=100)
 
+    def __str__(self):
+        return f"{self.lat} - {self.lng}"
+
+
+class Citizen(User):
     class Meta:
         pass
 
@@ -138,7 +152,7 @@ class EmergencyResponder(User):
 
 class EmergencyResponseTeam(models.Model):
     team_name = models.CharField(max_length=50)
-    location = models.ForeignKey(Location, on_delete=models.CASCADE, related_name="team_location")
+    address = models.CharField(max_length=100,blank=True,null=True)
     members = models.ManyToManyField(EmergencyResponder)
     specialization = models.CharField(max_length=255, choices=SPECIALIZATION_CHOICES, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -20,7 +20,7 @@ from rest_framework.authtoken.models import Token
 User = get_user_model()
 
 from accounts.models import Citizen, EmergencyResponder, EmergencyResponseTeam, Profile
-from .serializers import CitizenSerializer, EmergencyResponderSerializer, EmergencyResponseTeamSerializer, \
+from .serializers import CitizenSerializer, EmergencyResponderSerializer,EmergencyResponderCreateSerializer, EmergencyResponseTeamSerializer, \
     ProfileSerializer, LoginSerializer, UserSerializer, CitizenListSerializer, EmergencyResponderListSerializer, \
     EmergencyResponseTeamListSerializer, MemberSerializer
 
@@ -156,7 +156,7 @@ class EmergencyResponderViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelM
 
 
 class RegisterEmergencyResponderViewSet(CreateModelMixin, GenericViewSet):
-    serializer_class = EmergencyResponderSerializer
+    serializer_class = EmergencyResponderCreateSerializer
     queryset = EmergencyResponder.objects.all()
 
 

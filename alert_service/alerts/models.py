@@ -1,14 +1,18 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.gis.db import models
 
 # Create your models here.
 
 
 class Location(models.Model):
-    lat = models.FloatField(default=0.0, null=False, blank=False)
-    lng = models.FloatField(default=0.0, null=False, blank=False)
-    zip_code = models.CharField(max_length=255, null=True, blank=True)
-    locality = models.CharField(max_length=255, null=False, blank=False)
+    # lat = models.FloatField(default=0.0, null=False, blank=False)
+    # lng = models.FloatField(default=0.0, null=False, blank=False)
+    point = models.PointField()
+    address = models.CharField(max_length=255, null=True, blank=True)
+    country = models.CharField(max_length=100, null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    state = models.CharField(max_length=100)
 
     def __str__(self):
         return f"{self.lat} - {self.lng}"

@@ -53,6 +53,8 @@ INSTALLED_APPS = [
 
     # Third party apps
     'rest_framework',
+    'rest_framework_gis',
+    'leaflet'
 ]
 
 MIDDLEWARE = [
@@ -92,7 +94,8 @@ WSGI_APPLICATION = 'alert_service.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
+        # 'ENGINE': 'django.db.backends.sqlite3',
+        "ENGINE": "django.contrib.gis.db.backends.spatialite",
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
@@ -139,10 +142,17 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# SERVICES
+
+ACCOUNT_SERVICE = env('ACCOUNT_SERVICE')
+
 
 # MAPBOX CONFIG
 
 MAPBOX_ACCESS_TOKEN = env('MAPBOX_ACCESS_TOKEN')
+
+# GEOAPIFY CONFIG
+GEOAPIFY_API_KEY = env('GEOAPIFY_API_KEY')
 
 # CORS CONFIG
 
@@ -153,10 +163,16 @@ CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.TokenAuthentication",
-        "rest_framework.authentication.SessionAuthentication",
+        "alerts.authentication.TokenAuthentication"
     ),
     "DEFAULT_PERMISSIONS_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
+}
+
+
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (3.866667, 11.516667),
+    'DEFAULT_ZOOM': 4,
+    'ATTRIBUTION_PREFIX': '<a target="_blank" href="https://github.com/BrownofDarkness">Powered By wilbrown</a>'
 }

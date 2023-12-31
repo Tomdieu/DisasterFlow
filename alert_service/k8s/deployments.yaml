@@ -20,5 +20,12 @@ spec:
           image: alert:latest
           imagePullPolicy: IfNotPresent
           ports:
-          - containerPort: 8001
+            - containerPort: 8001
+          resources:
+            limits:
+              memory: "512Mi"  # Adjust based on your application's needs
+              cpu: "0.5"       # Adjust based on your application's needs
+            requests:
+              memory: "256Mi"  # Adjust based on your application's needs
+              cpu: "0.1"       # Adjust based on your application's needs
       restartPolicy: Always

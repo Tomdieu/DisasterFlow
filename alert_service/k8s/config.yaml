@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: alert-config
 data:
-  AUTH_URL : account:8000
+  ACCOUNT_SERVICE : account:8000

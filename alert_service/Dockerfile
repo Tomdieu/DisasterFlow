@@ -27,7 +27,9 @@ RUN apt-get clean && \
 
 COPY . .
 
-RUN python manage.py makemigrations && python manage.py migrate
+RUN python manage.py makemigrations && \
+    python ./manage.py shell -c "import django;django.db.connection.cursor().execute('SELECT InitSpatialMetaData(1);')"; && \ 
+    python manage.py migrate
 
 # Collect static files
 # RUN /opt/venv/bin/python manage.py collectstatic --noinput

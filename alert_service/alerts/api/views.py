@@ -6,7 +6,10 @@ from rest_framework import status
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.decorators import action
 
-from alerts.api.serializers import AlertCreateSerializer,AlertListSerializer,LocationSerializer,UserReportCreateSerializer,UserSerializer,ProfileSerializer
+from rest_framework.permissions import IsAuthenticated
+from alerts.authentication import TokenAuthentication
+
+from alerts.api.serializers import AlertCreateSerializer,AlertListSerializer,LocationSerializer,UserReportCreateSerializer,UserReportListSerializer
 from alerts.models import Alert,Location,UserReport,User,Profile
 
 class LocationViewSet(GenericViewSet,CreateModelMixin,UpdateModelMixin,RetrieveModelMixin,ListModelMixin,DestroyModelMixin):
@@ -17,9 +20,22 @@ class UserReportViewSet(GenericViewSet,CreateModelMixin,UpdateModelMixin,Retriev
     queryset = UserReport.objects.all()
     serializer_class = UserReportCreateSerializer
 
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    @action(methods=['GET'],detail=False,url_path='my-reports')
+    def my_reports(self,request):
+        reports = UserReport.objects.filter(user__id=request.user.id)
+        serializer = UserReportListSerializer(reports,many=True)
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
 class AlertViewSet(GenericViewSet,CreateModelMixin,UpdateModelMixin,RetrieveModelMixin,ListModelMixin,DestroyModelMixin):
     queryset = Alert.objects.all()
     serializer_class = AlertCreateSerializer
+
+
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -36,7 +52,7 @@ class AlertViewSet(GenericViewSet,CreateModelMixin,UpdateModelMixin,RetrieveMode
         return Response({'message':'location_id is required'},status=status.HTTP_400_BAD_REQUEST)
 
     @action(methods=['GET'],detail=False,url_path='get-alerts-by-user')
-    def get_alerts_by_user(self,request):
+    def get_alerts_by_user(self,request):   
         user_id = request.query_params.get('user_id')
         if user_id:
             alerts = Alert.objects.filter(user__id=user_id)

@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   account_service:
-    image: account_service
+    image: account
     build:
       context: .
       dockerfile: Dockerfile

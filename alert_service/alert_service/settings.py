@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     # Third party apps
     'rest_framework',
     'rest_framework_gis',
+    'django.contrib.gis',
     'leaflet'
 ]
 

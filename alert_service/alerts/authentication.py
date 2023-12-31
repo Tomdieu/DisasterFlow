@@ -2,12 +2,13 @@ import requests
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 from django.conf import settings
+from django.http import HttpRequest
 
 from .models import User
 
 class TokenAuthentication(BaseAuthentication):
 
-    def authenticate(self, request):
+    def authenticate(self, request:HttpRequest):
 
         token = request.headers.get('Authorization')
 

@@ -124,9 +124,10 @@ class EmergencyResponseTeamSerializer(serializers.ModelSerializer):
 
 
 class EmergencyResponseTeamListSerializer(serializers.ModelSerializer):
+    members = EmergencyResponderListSerializer(many=True)
     class Meta:
         model = EmergencyResponseTeam
-        fields = ['team_name', 'members']
+        fields = ['team_name', 'members','address','specialization','lat','lng','created_at','created_by']
 
 
 class UserSerializer(serializers.ModelSerializer):

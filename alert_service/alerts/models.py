@@ -1,14 +1,12 @@
-from django.db import models
+# from django.db import models
 from django.utils import timezone
 from django.contrib.gis.db import models
-from .types import TYPES
+from .disaster_types import TYPES
 
 # Create your models here.
 
 
 class Location(models.Model):
-    # lat = models.FloatField(default=0.0, null=False, blank=False)
-    # lng = models.FloatField(default=0.0, null=False, blank=False)
     point = models.PointField()
     address = models.CharField(max_length=255, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)

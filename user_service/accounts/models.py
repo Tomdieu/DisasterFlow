@@ -51,18 +51,6 @@ class User(AbstractUser):
         return f"{self.username} - {self.type}"
 
 
-class Location(models.Model):
-    lat = models.FloatField(default=0.0, null=False, blank=False)
-    lng = models.FloatField(default=0.0, null=False, blank=False)
-    address = models.CharField(max_length=255, null=True, blank=True)
-    country = models.CharField(max_length=100, null=True, blank=True)
-    city = models.CharField(max_length=100, null=True, blank=True)
-    state = models.CharField(max_length=100)
-
-    def __str__(self):
-        return f"{self.lat} - {self.lng}"
-
-
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name="profile")
     # location = models.ForeignKey(Location,on_delete=models.CASCADE,null=True,blank=True)
@@ -153,6 +141,8 @@ class EmergencyResponder(User):
 class EmergencyResponseTeam(models.Model):
     team_name = models.CharField(max_length=50)
     address = models.CharField(max_length=100,blank=True,null=True)
+    lat = models.FloatField(default=0.0, null=False, blank=False)
+    lng = models.FloatField(default=0.0, null=False, blank=False)
     members = models.ManyToManyField(EmergencyResponder)
     specialization = models.CharField(max_length=255, choices=SPECIALIZATION_CHOICES, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

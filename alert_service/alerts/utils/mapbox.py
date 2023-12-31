@@ -30,8 +30,6 @@ def extract_location_data(location_data):
     return {
         'lat': feature['center'][1],
         'lng': feature['center'][0],
-        'zip_code': feature['context'][0]['text'],
-        'locality': feature['context'][1]['text'],
     }
 
 def get_alerts_within_location(place:str):

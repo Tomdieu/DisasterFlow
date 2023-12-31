@@ -13,10 +13,9 @@ class ReadOnlyModelAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
-
-
+    
 @admin.register(Location)
-class LocationAdmin(admin.ModelAdmin,LeafletGeoAdmin):
+class LocationAdmin(LeafletGeoAdmin):
 
     list_display = ['point', 'address', 'country', 'city', 'state']
     

@@ -1,11 +1,12 @@
 from rest_framework import serializers
-
+from rest_framework_gis.serializers import GeoFeatureModelSerializer
 from alerts.models import Alert,Location,UserReport,User,Profile
 
-class LocationSerializer(serializers.ModelSerializer):
+class LocationSerializer(GeoFeatureModelSerializer):
     
     class Meta:
         model = Location
+        geo_field = "point"
         fields = '__all__'
 
 class ProfileSerializer(serializers.ModelSerializer):

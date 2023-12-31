@@ -177,5 +177,11 @@ REST_FRAMEWORK = {
 LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (3.866667, 11.516667),
     'DEFAULT_ZOOM': 4,
-    'ATTRIBUTION_PREFIX': '<a target="_blank" href="https://github.com/BrownofDarkness">Powered By wilbrown</a>'
+    'ATTRIBUTION_PREFIX': '<a target="_blank" href="https://github.com/tomdieu">Powered By ivantom</a>'
 }
+
+# RABBIT MQ CONFIGURATIONS
+RABBITMQ_USERNAME = env('RABBITMQ_USERNAME')
+RABBITMQ_PASSWORD = env('RABBITMQ_PASSWORD')
+RABBITMQ_HOST = env('RABBITMQ_HOST')
+RABBITMQ_VHOST = env('RABBITMQ_VHOST')

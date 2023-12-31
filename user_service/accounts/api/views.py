@@ -32,6 +32,20 @@ class UserViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
 
+    def get_serializer_class(self):
+
+        if self.action == 'list':
+            return UserSerializer
+        elif self.action in ["info"]:
+            return UserSerializer
+        return UserSerializer
+
+    @action(methods=['get'], detail=False, url_path='user-info')
+    def info(self, request):
+        user = request.user
+        serializer = UserSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class CitizenViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
     authentication_classes = [TokenAuthentication, SessionAuthentication]
@@ -131,6 +145,7 @@ class EmergencyResponderViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelM
         else:
             return Response({"success": False, "message": "Invalid Data"}, status=status.HTTP_400_BAD_REQUEST)
 
+
 # class EmergencyResponseTeamViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin,
 #                                    GenericViewSet):
 #     authentication_classes = [TokenAuthentication, SessionAuthentication]
@@ -141,14 +156,14 @@ class EmergencyResponderViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelM
 
 
 class RegisterEmergencyResponderViewSet(CreateModelMixin, GenericViewSet):
-
     serializer_class = EmergencyResponderSerializer
     queryset = EmergencyResponder.objects.all()
 
-class RegisterCitizenResponderViewSet(CreateModelMixin, GenericViewSet):
 
+class RegisterCitizenResponderViewSet(CreateModelMixin, GenericViewSet):
     serializer_class = CitizenSerializer
     queryset = Citizen.objects.all()
+
 
 class LoginViewSet(CreateModelMixin, GenericViewSet):
     serializer_class = LoginSerializer

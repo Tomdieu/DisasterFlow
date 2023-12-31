@@ -19,6 +19,7 @@ class Location(models.Model):
 
 
 class User(models.Model):
+    id = models.BigIntegerField(primary_key=True)
     username = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=255)

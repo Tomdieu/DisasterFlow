@@ -54,7 +54,9 @@ INSTALLED_APPS = [
     # Third party apps
     'rest_framework',
     'rest_framework_gis',
-    'leaflet'
+    'django.contrib.gis',
+    'leaflet',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -170,6 +172,7 @@ REST_FRAMEWORK = {
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
 }
 
+# Leadlet Config
 
 LEAFLET_CONFIG = {
     'DEFAULT_CENTER': (3.866667, 11.516667),

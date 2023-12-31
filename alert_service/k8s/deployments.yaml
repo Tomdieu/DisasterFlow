@@ -20,7 +20,7 @@ spec:
           image: alert:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8000
+            - containerPort: 8001
           envFrom:
             - configMapRef:
                 name: alert-config
@@ -67,6 +67,6 @@ spec:
     app: alert
   ports:
     - protocol: TCP
-      port: 8000
-      targetPort: 8000
+      port: 8001
+      targetPort: 8001
   type: ClusterIP

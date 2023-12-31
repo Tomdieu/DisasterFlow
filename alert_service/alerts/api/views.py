@@ -11,14 +11,22 @@ from alerts.authentication import TokenAuthentication
 
 from alerts.api.serializers import AlertCreateSerializer,AlertListSerializer,LocationSerializer,UserReportCreateSerializer,UserReportListSerializer
 from alerts.models import Alert,Location,UserReport,User,Profile
+from alerts.utils.alerts import get_alerts_within_location
 
-class LocationViewSet(GenericViewSet,CreateModelMixin,UpdateModelMixin,RetrieveModelMixin,ListModelMixin,DestroyModelMixin):
-    queryset = Location.objects.all()
-    serializer_class = LocationSerializer
+# class LocationViewSet(GenericViewSet,CreateModelMixin,UpdateModelMixin,RetrieveModelMixin,ListModelMixin,DestroyModelMixin):
+#     queryset = Location.objects.all()
+#     serializer_class = LocationSerializer
 
 class UserReportViewSet(GenericViewSet,CreateModelMixin,UpdateModelMixin,RetrieveModelMixin,ListModelMixin,DestroyModelMixin):
     queryset = UserReport.objects.all()
     serializer_class = UserReportCreateSerializer
+
+    def get_serializer_class(self):
+
+        if self.action in ['list','retrieve']:
+            return UserReportListSerializer
+        
+        return UserReportCreateSerializer
 
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
@@ -44,9 +52,10 @@ class AlertViewSet(GenericViewSet,CreateModelMixin,UpdateModelMixin,RetrieveMode
 
     @action(methods=['GET'],detail=False,url_path='get-alerts-by-location')
     def get_alerts_by_location(self,request):
-        location_id = request.query_params.get('location_id')
-        if location_id:
-            alerts = Alert.objects.filter(location__id=location_id)
+        location = request.query_params.get('location')
+        if location:
+            # alerts = Alert.objects.filter(location__id=location)
+            alerts = get_alerts_within_location(place=location)
             serializer = AlertListSerializer(alerts,many=True)
             return Response(serializer.data,status=status.HTTP_200_OK)
         return Response({'message':'location_id is required'},status=status.HTTP_400_BAD_REQUEST)
@@ -62,10 +71,10 @@ class AlertViewSet(GenericViewSet,CreateModelMixin,UpdateModelMixin,RetrieveMode
 
     @action(methods=['GET'],detail=False,url_path='get-alerts-by-location-and-user')
     def get_alerts_by_location_and_user(self,request):
-        location_id = request.query_params.get('location_id')
+        location = request.query_params.get('location')
         user_id = request.query_params.get('user_id')
-        if location_id and user_id:
-            alerts = Alert.objects.filter(location__id=location_id,user__id=user_id)
+        if location and user_id:
+            alerts = get_alerts_within_location(place=location,user_id=user_id)
             serializer = AlertListSerializer(alerts,many=True)
             return Response(serializer.data,status=status.HTTP_200_OK)
         return Response({'message':'location_id and user_id are required'},status=status.HTTP_400_BAD_REQUEST)

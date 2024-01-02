@@ -22,10 +22,11 @@ class UserSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class UserReportCreateSerializer(serializers.ModelSerializer):
-
+    location = LocationSerializer(write_only=True)
     class Meta:
         model = UserReport
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = ['user']
 
 class UserReportListSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
@@ -34,7 +35,7 @@ class UserReportListSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AlertCreateSerializer(serializers.ModelSerializer):
-    location = LocationSerializer()
+    location = LocationSerializer(write_only=True)
     class Meta:
 
         model = Alert

@@ -146,15 +146,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # SERVICES
 
-ACCOUNT_SERVICE = env('ACCOUNT_SERVICE')
+ACCOUNT_SERVICE = env('ACCOUNT_SERVICE',default='account:8000')
 
 
 # MAPBOX CONFIG
 
-MAPBOX_ACCESS_TOKEN = env('MAPBOX_ACCESS_TOKEN')
+MAPBOX_ACCESS_TOKEN = env('MAPBOX_ACCESS_TOKEN',default='')
 
 # GEOAPIFY CONFIG
-GEOAPIFY_API_KEY = env('GEOAPIFY_API_KEY')
+GEOAPIFY_API_KEY = env('GEOAPIFY_API_KEY',default='')
 
 # CORS CONFIG
 
@@ -165,9 +165,9 @@ CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "alerts.authentication.TokenAuthentication"
+        # "alerts.authentication.TokenAuthentication"
     ),
-    "DEFAULT_PERMISSIONS_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    # "DEFAULT_PERMISSIONS_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
 }
@@ -181,7 +181,7 @@ LEAFLET_CONFIG = {
 }
 
 # RABBIT MQ CONFIGURATIONS
-RABBITMQ_USERNAME = env('RABBITMQ_USERNAME')
-RABBITMQ_PASSWORD = env('RABBITMQ_PASSWORD')
-RABBITMQ_HOST = env('RABBITMQ_HOST')
-RABBITMQ_VHOST = env('RABBITMQ_VHOST')
+RABBITMQ_USERNAME = env('RABBITMQ_USERNAME',default='admin')
+RABBITMQ_PASSWORD = env('RABBITMQ_PASSWORD',default='admin')
+RABBITMQ_HOST = env('RABBITMQ_HOST',default='rabbitmq')
+RABBITMQ_VHOST = env('RABBITMQ_VHOST',default='/')

@@ -11,9 +11,9 @@ RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
 # Set the working directory to /app
-WORKDIR /emergency_responder_service
+WORKDIR /emergency_responder
 
-COPY requirements.txt /emergency_responder_service/requirements.txt
+COPY requirements.txt /emergency_responder/requirements.txt
 
 
 RUN apt-get update && \
@@ -34,5 +34,7 @@ RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY . .
+
+EXPOSE 8002
 
 RUN python manage.py makemigrations && python ./manage.py shell -c "import django;django.db.connection.cursor().execute('SELECT InitSpatialMetaData(1);')" && python manage.py migrate

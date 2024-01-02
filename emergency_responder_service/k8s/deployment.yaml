@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: emergency-responder
+  labels:
+    app: emergency-responder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: emergency-responder
+  template:
+    metadata:
+      name: emergency-responder
+      labels:
+        app: emergency-responder
+    spec:
+      containers:
+        - name: emergency-responder
+          image: ghcr.io/tomdieu/DisasterFlow/emergency_responder:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8002
+          envFrom:
+            - secretRef:
+                name: geoapify-secret
+            - secretRef:
+                name: mapbox-secret
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: emergency-responder
+  labels:
+    app: emergency-responder
+spec:
+  selector:
+    app: emergency-responder
+  ports:
+    - protocol: TCP
+      port: 8002
+      targetPort: 8002
+  type: ClusterIP

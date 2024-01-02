@@ -19,6 +19,7 @@ spec:
         - name: alert
           image: alert:latest
           imagePullPolicy: IfNotPresent
+          command: ["python", "manage.py","runserver","0.0.0.0:8001"]
           ports:
             - containerPort: 8001
           envFrom:
@@ -31,10 +32,10 @@ spec:
           resources:
             limits:
               memory: "512Mi"
-              cpu: "0.5"
+              cpu: "500m"
             requests:
               memory: "256Mi"
-              cpu: "0.1"    
+              cpu: "250m"    
         - name: consumer
           image: alert:latest
           command: ['python',"-u",'consumer.py']

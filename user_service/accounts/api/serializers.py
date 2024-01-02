@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from rest_framework import fields
-from accounts.models import Profile, Citizen, EmergencyResponder, EmergencyResponseTeam, User,Location
+from accounts.models import Profile, Citizen, EmergencyResponder, User,Location
 
 
 class UpdatePasswordSerializer(serializers.Serializer):
@@ -96,38 +96,6 @@ class EmergencyResponderListSerializer(serializers.ModelSerializer):
         model = EmergencyResponder
         fields = ['username', 'email', 'type', 'date_of_birth', 'profile_image', 'phone_number',
                   "emergency_contact_number", "emergency_contact_person"]
-
-
-class MemberSerializer(serializers.Serializer):
-    team_id = serializers.IntegerField()
-
-    class Meta:
-        extra_kwargs = {
-            "team_id": {"required": True},
-        }
-
-
-    def validate_team_id(self, value):
-
-        if value:
-            try:
-                value = EmergencyResponseTeam.objects.get(id=value)
-            except EmergencyResponseTeam.DoesNotExist:
-                raise serializers.ValidationError("Team does not exist")
-            return value
-
-
-class EmergencyResponseTeamSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = EmergencyResponseTeam
-        fields = ['team_name']
-
-
-class EmergencyResponseTeamListSerializer(serializers.ModelSerializer):
-    members = EmergencyResponderListSerializer(many=True)
-    class Meta:
-        model = EmergencyResponseTeam
-        fields = ['team_name', 'members','address','specialization','lat','lng','created_at','created_by']
 
 
 class UserSerializer(serializers.ModelSerializer):

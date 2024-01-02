@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: emergency-responder
-          image: ghcr.io/tomdieu/DisasterFlow/emergency_responder:latest
+          image: ghcr.io/tomdieu/disasterflow/emergency_responder:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8002

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
-from .models import Profile, Event, Citizen, EmergencyResponder, EmergencyResponseTeam, Location
+from .models import Profile, Event, Citizen, EmergencyResponder, Location#,EmergencyResponseTeam
 
 from django.contrib.auth import get_user_model
 
@@ -168,7 +168,7 @@ class EmergencyResponderAdmin(BaseUserAdmin):
     inlines = [ProfileInline, LocationInline]
 
 
-admin.site.register(EmergencyResponseTeam)
+# admin.site.register(EmergencyResponseTeam)
 admin.site.register(Event)
 
 

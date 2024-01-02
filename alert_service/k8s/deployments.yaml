@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: alert
-          image: alert:latest
+          image: ghcr.io/tomdieu/disasterflow/alert:latest
           imagePullPolicy: IfNotPresent
           command: ["python", "manage.py","runserver","0.0.0.0:8001"]
           ports:
@@ -37,7 +37,7 @@ spec:
               memory: "256Mi"
               cpu: "250m"    
         - name: consumer
-          image: alert:latest
+          image: ghcr.io/tomdieu/disasterflow/alert:latest
           command: ['python',"-u",'consumer.py']
           restartPolicy: Always
           volumeMounts:

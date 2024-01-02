@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: account
-          image: account:latest
+          image: ghcr.io/tomdieu/disasterflow/user:latest
           imagePullPolicy: IfNotPresent
           command: ["python", "manage.py","runserver","0.0.0.0:8000"]
           ports:

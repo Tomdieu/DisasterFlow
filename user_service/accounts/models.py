@@ -136,21 +136,6 @@ class EmergencyResponder(User):
     def accept(self, visitor: Visitor):
         visitor.visit_emergency_responder(self)
 
-
-class EmergencyResponseTeam(models.Model):
-    team_name = models.CharField(max_length=50)
-    address = models.CharField(max_length=100,blank=True,null=True)
-    lat = models.FloatField(default=0.0, null=False, blank=False)
-    lng = models.FloatField(default=0.0, null=False, blank=False)
-    members = models.ManyToManyField(EmergencyResponder)
-    specialization = models.CharField(max_length=255, choices=SPECIALIZATION_CHOICES, null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    created_by = models.OneToOneField(EmergencyResponder, on_delete=models.CASCADE, related_name="team")
-
-    def __str__(self):
-        return f"Emergency Response Team: {self.team_name}"
-
-
 class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     event_type = models.CharField(max_length=255)

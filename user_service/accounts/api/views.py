@@ -1,7 +1,5 @@
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin
 from rest_framework.viewsets import GenericViewSet
-from rest_framework.views import APIView
-from rest_framework.generics import ListAPIView, CreateAPIView
 from rest_framework.decorators import action
 
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
@@ -9,21 +7,17 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 
 from rest_framework import status
 from rest_framework.response import Response
-from drf_yasg.utils import swagger_auto_schema
 from django.contrib.auth import get_user_model
-from django.utils.decorators import method_decorator
 
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login
 
 from rest_framework.authtoken.models import Token
 
 User = get_user_model()
 
-from accounts.models import Citizen, EmergencyResponder, EmergencyResponseTeam, Profile
-from .serializers import CitizenSerializer, EmergencyResponderSerializer,EmergencyResponderCreateSerializer, EmergencyResponseTeamSerializer, \
-    ProfileSerializer, LoginSerializer, UserSerializer, CitizenListSerializer, EmergencyResponderListSerializer, \
-    EmergencyResponseTeamListSerializer, MemberSerializer
-
+from accounts.models import Citizen, EmergencyResponder
+from .serializers import CitizenSerializer, EmergencyResponderSerializer,EmergencyResponderCreateSerializer, \
+    ProfileSerializer, LoginSerializer, UserSerializer, CitizenListSerializer, EmergencyResponderListSerializer
 
 class UserViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     authentication_classes = [TokenAuthentication, SessionAuthentication]
@@ -95,10 +89,6 @@ class EmergencyResponderViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelM
             return EmergencyResponderListSerializer
         elif self.action in ["profile", "update_profile"]:
             return ProfileSerializer
-        elif self.action in ["create_team"]:
-            return EmergencyResponseTeamSerializer
-        elif self.action in ['add_team_member']:
-            return MemberSerializer
         return EmergencyResponderSerializer
 
     @action(detail=True, methods=['GET'])
@@ -111,48 +101,6 @@ class EmergencyResponderViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelM
     # @action(detail=True, methods=['post'])
     # def set_password(self, request, pk=None):
     #     user = self.get_object()
-
-    @action(detail=True, methods=['get'])
-    def teams(self, request):
-
-        object = self.get_object()
-        teams = object.team_set.all()
-        serializer = EmergencyResponseTeamListSerializer(teams, many=True)
-        return Response({"success": True, "data": serializer.data}, status=status.HTTP_200_OK)
-
-    @action(detail=True, methods=['post'])
-    def create_team(self, request):
-        object = self.get_object()
-        serializer = EmergencyResponseTeamSerializer(data=request.data)
-        # add the authenticated user to the emergency response team newly created
-        if serializer.is_valid(raise_exception=True):
-            team = serializer.save()
-            team.members.add(object)
-
-            return Response({"success": True, "data": serializer.data}, status=status.HTTP_201_CREATED)
-
-        else:
-            return Response({"success": False, "message": "Invalid Data"}, status=status.HTTP_400_BAD_REQUEST)
-
-    @action(detail=True, methods=['post'])
-    def add_team_member(self, request):
-        object = self.get_object()
-        serializer = MemberSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            team = serializer.validated_data["team_id"]
-            team.members.add(object)
-            return Response({"success": True, "data": serializer.data}, status=status.HTTP_201_CREATED)
-        else:
-            return Response({"success": False, "message": "Invalid Data"}, status=status.HTTP_400_BAD_REQUEST)
-
-
-# class EmergencyResponseTeamViewSet(CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin,
-#                                    GenericViewSet):
-#     authentication_classes = [TokenAuthentication, SessionAuthentication]
-#     permission_classes = [IsAuthenticated]
-#
-#     queryset = EmergencyResponseTeam.objects.all()
-#     serializer_class = EmergencyResponseTeamSerializer
 
 
 class RegisterEmergencyResponderViewSet(CreateModelMixin, GenericViewSet):

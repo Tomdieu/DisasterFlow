@@ -19,6 +19,7 @@ spec:
         - name: account
           image: account:latest
           imagePullPolicy: IfNotPresent
+          command: ["python", "manage.py","runserver","0.0.0.0:8000"]
           ports:
             - containerPort: 8000
           env:
@@ -37,5 +38,12 @@ spec:
                 secretKeyRef:
                   name: rabbitmq-secret
                   key: RABBITMQ_HOST
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
       restartPolicy: Always
       

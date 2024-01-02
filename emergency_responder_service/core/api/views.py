@@ -40,8 +40,10 @@ class EmergencyResponseTeamViewSet(CreateModelMixin,ListModelMixin,RetrieveModel
     
     @action(detail=True,methods=['post'])
     def add_member(self,request,pk=None):
+        team = self.get_object()
         pass
     @action(detail=True,methods=['post'])
     def remove_member(self,request,pk=None):
+        team = self.get_object()
         pass
     

@@ -19,8 +19,9 @@ channel.queue_declare(queue='alert')
 
 def callback(ch,method,properties,body):
 
-    print("New Message Recieve")
+    print(" [+] New Message Recieve")
 
 channel.basic_consume(queue='alert',on_message_callback=callback,auto_ack=True)
 
+print(" [+] Started Consuming")
 channel.start_consuming()

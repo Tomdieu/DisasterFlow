@@ -26,8 +26,8 @@ jobs:
 
       - name: Push Docker Image to Github Container Registry
         run: |
-          docker tag user:latest ghcr.io/tomdieu/DisasterFlow/user:latest
-          docker push ghcr.io/tomdieu/DisasterFlow/user:latest
+          docker tag user:latest ghcr.io/tomdieu/disasterflow/user:latest
+          docker push ghcr.io/tomdieu/disasterflow/user:latest
 
   build-alerts-and-push:
     runs-on: ubuntu-latest
@@ -49,8 +49,8 @@ jobs:
 
       - name: Push Docker Image to Github Container Registry
         run: |
-          docker tag alert:latest ghcr.io/tomdieu/DisasterFlow/alert:latest
-          docker push ghcr.io/tomdieu/DisasterFlow/alert:latest
+          docker tag alert:latest ghcr.io/tomdieu/disasterflow/alert:latest
+          docker push ghcr.io/tomdieu/disasterflow/alert:latest
           
   build-emergency_responder-and-push:
 
@@ -73,5 +73,5 @@ jobs:
 
       - name: Push Docker Image to Github Container Registry
         run: |
-          docker tag emergency_responder:latest ghcr.io/tomdieu/DisasterFlow/emergency_responder:latest
-          docker push ghcr.io/tomdieu/DisasterFlow/emergency_responder:latest
+          docker tag emergency_responder:latest ghcr.io/tomdieu/disasterflow/emergency_responder:latest
+          docker push ghcr.io/tomdieu/disasterflow/emergency_responder:latest

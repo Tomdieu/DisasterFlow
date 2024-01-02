@@ -42,6 +42,30 @@ class EmergencyResponder(models.Model):
         max_length=255, choices=SPECIALIZATION_CHOICES, null=True, blank=True
     )
 
+class Profile(models.Model):
+    user = models.OneToOneField(EmergencyResponder, on_delete=models.CASCADE, primary_key=True, related_name="profile")
+    location = models.CharField(max_length=255, blank=True, null=True)
+    skills = models.CharField(help_text=_("each skill Should be separated by `,`"), max_length=255, null=True,
+                              blank=True)
+    interest = models.TextField(null=True, blank=True)
+
+    is_online = models.BooleanField(default=False)
+    last_activity = models.DateTimeField(blank=True,null=True)
+
+    class Meta:
+        pass
+
+    def __str__(self):
+        return f"{self.user} - profile"
+    
+class Location(models.Model):
+    user = models.OneToOneField(EmergencyResponder, on_delete=models.CASCADE, primary_key=True, related_name="location")
+    point = models.PointField(blank=True, null=True)
+    address = models.CharField(max_length=255, null=True, blank=True)
+    country = models.CharField(max_length=100, null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    state = models.CharField(max_length=100)
+
 
 class EmergencyResponseTeam(models.Model):
     team_name = models.CharField(max_length=255)
@@ -57,3 +81,4 @@ class EmergencyResponseTeam(models.Model):
 
     def __str__(self):
         return self.team_name
+ 

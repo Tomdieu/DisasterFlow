@@ -53,7 +53,6 @@ class User(AbstractUser):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True, related_name="profile")
-    # location = models.ForeignKey(Location,on_delete=models.CASCADE,null=True,blank=True)
     location = models.CharField(max_length=255, blank=True, null=True)
     skills = models.CharField(help_text=_("each skill Should be separated by `,`"), max_length=255, null=True,
                               blank=True)
@@ -76,7 +75,7 @@ class Location(models.Model):
     address = models.CharField(max_length=255, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
-    state = models.CharField(max_length=100)
+    state = models.CharField(max_length=100,null=True,blank=True)
 
     def __str__(self):
         return f"{self.lat} - {self.lng}"

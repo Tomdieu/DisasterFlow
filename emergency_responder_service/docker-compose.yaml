@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+
+  emergency_responder:
+
+    image: ghcr.io/tomdieu/DisasterFlow/emergency_responder:latest
+    ports:
+      - "8002:8002"
+    container_name: emergency_responder
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8002"]
+    networks:
+      - bridge
+
+networks:
+    bridge:
+        driver: bridge
+        name: network

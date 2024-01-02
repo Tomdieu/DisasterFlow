@@ -1,0 +1,55 @@
+from rest_framework import serializers
+from core.models import EmergencyResponder,EmergencyResponseTeam,Location,Profile
+from rest_framework_gis.serializers import GeoFeatureModelSerializer
+
+# Serializer for Profile model
+class ProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = '__all__'
+
+# Serializer for Location model
+
+class LocationSerializer(GeoFeatureModelSerializer):
+    class Meta:
+        model = Location
+        geo_field = 'point'
+        fields = '__all__'
+
+# Serializer for EmergencyResponder model
+class EmergencyResponderSerializer(serializers.ModelSerializer):
+    profile = ProfileSerializer(read_only=True)
+    class Meta:
+        model = EmergencyResponder
+        fields = '__all__'
+
+# Serializer to create an EmergencyResponderTeam
+
+class CreateEmergencyResponseTeamSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EmergencyResponseTeam
+        fields = ['team_name','address','point','specialization']
+
+# Serializer for EmergencyResponseTeam model
+class EmergencyResponseTeamSerializer(GeoFeatureModelSerializer):
+    members = EmergencyResponderSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = EmergencyResponseTeam
+        geo_field = 'point'
+        fields = '__all__'
+# Serializer to add an EmergencyResponder to an EmergencyResponseTeam
+class AddOrRemoveMemberSerializer(serializers.Serializer):
+    
+    emergency_responder_id = serializers.IntegerField()
+
+    class Meta:
+
+        fields = ['emergency_responder_id']
+
+    def validate_emergency_responsder_id(self,value):
+
+        if not EmergencyResponder.objects.filter(id=value).exists():
+            raise serializers.ValidationError("Emergency Responder with this id does not exist")
+        return EmergencyResponder.objects.get(id=value)
+    

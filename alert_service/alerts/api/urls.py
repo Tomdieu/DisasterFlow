@@ -1,6 +1,6 @@
 from rest_framework.routers import DefaultRouter
 
-from .views import LocationViewSet,UserReportViewSet,AlertViewSet
+from .views import UserReportViewSet,AlertViewSet
 
 router = DefaultRouter()
 # router.register(r'locations',LocationViewSet)

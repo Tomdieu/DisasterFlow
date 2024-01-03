@@ -1,5 +1,7 @@
 # DisasterFlow
 
+[![Build Docker Image](https://github.com/Tomdieu/DisasterFlow/actions/workflows/build-and-publish-images.yaml/badge.svg)](https://github.com/Tomdieu/DisasterFlow/actions/workflows/build-and-publish-images.yaml)
+
 ## A Microservice-Oriented Disaster Management System
 
 This is a Disaster Management app designed to help individuals and communities effectively respond to and recover from disasters.

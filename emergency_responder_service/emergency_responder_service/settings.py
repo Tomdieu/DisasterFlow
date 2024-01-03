@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
 
     # Third part apps
+
+    'leaflet',
+    'rest_framework_gis',
+    'django.contrib.gis',
     
 ]
 

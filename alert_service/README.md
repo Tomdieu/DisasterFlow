@@ -6,9 +6,11 @@ This service is responsible for sending alerts to the user.
 
 ## Functionality
 
+- The citizen are the one responsible to report an alert.
+
 - System should provide real-time alerts for different types of disasters.
 
-# Installation
+## Installation
 
 ```bash
 pip install -r requirements.txt

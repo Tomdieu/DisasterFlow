@@ -1,16 +1,24 @@
 
 
-def determine_severity(nature:str, impact:str, urgency:str):
+def determine_severity(impact:str, urgency:str):
     
-    if nature == 'Fire':
-        # Custom logic for fire incidents
-        if impact == 'High' and urgency == 'Immediate':
-            return 'Critical'
-        elif impact == 'High':
-            return 'High'
-        else:
-            return 'Moderate'
-    else:
-        # Default severity determination for other incident types
-        # Custom logic can be added for different incident types
-        return 'Moderate'
+    severity = "low"
+
+    if impact == "moderate" and urgency == "moderate":
+        severity = "moderate"
+    elif impact == "high" and urgency == "high":
+        severity = "high"
+    elif impact == "high" and urgency == "moderate":
+        severity = "moderate"
+    elif impact == "moderate" and urgency == "high":
+        severity = "high"
+    elif impact == "high" and urgency == "low":
+        severity = "moderate"
+    elif impact == "low" and urgency == "high":
+        severity = "moderate"
+    elif impact == "moderate" and urgency == "low":
+        severity = "low"
+    elif impact == "low" and urgency == "moderate":
+        severity = "low"
+
+    return severity

@@ -11,10 +11,18 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
+
+env = environ.Env(
+    # set casting, default value
+    DEBUG=(bool, False)
+)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -133,3 +141,33 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# CORS CONFIG
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+
+# REST FRAMEWORK CONFIGURATIONS
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        # "alerts.authentication.TokenAuthentication"
+    ),
+    # "DEFAULT_PERMISSIONS_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_SCHEMA_CLASS": "rest_framework.schemas.coreapi.AutoSchema",
+    "TEST_REQUEST_DEFAULT_FORMAT": "json",
+}
+
+# Leadlet Config
+
+LEAFLET_CONFIG = {
+    'DEFAULT_CENTER': (3.866667, 11.516667),
+    'DEFAULT_ZOOM': 4,
+    'ATTRIBUTION_PREFIX': '<a target="_blank" href="https://github.com/tomdieu">Powered By ivantom</a>'
+}
+
+# RABBIT MQ CONFIGURATIONS
+RABBITMQ_USERNAME = env('RABBITMQ_USERNAME',default='admin')
+RABBITMQ_PASSWORD = env('RABBITMQ_PASSWORD',default='admin')
+RABBITMQ_HOST = env('RABBITMQ_HOST',default='rabbitmq')
+RABBITMQ_VHOST = env('RABBITMQ_VHOST',default='/')

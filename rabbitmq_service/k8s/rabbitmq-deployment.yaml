@@ -23,6 +23,13 @@ spec:
             value: admin
           - name: RABBITMQ_PASSWORD
             value: admin
+          resources:
+            limits:
+              cpu: 100m
+              memory: 250Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
       restartPolicy: Always
 
 ---

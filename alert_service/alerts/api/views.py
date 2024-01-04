@@ -29,7 +29,7 @@ class UserReportViewSet(GenericViewSet,CreateModelMixin,UpdateModelMixin,Retriev
         
         return UserReportCreateSerializer
     
-    permission_classes = [AllowAny]
+    # permission_classes = [AllowAny]
 
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]

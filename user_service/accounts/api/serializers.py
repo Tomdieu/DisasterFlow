@@ -2,6 +2,10 @@ from rest_framework import serializers
 from rest_framework import fields
 from accounts.models import Profile, Citizen, EmergencyResponder, User,Location
 
+class LocationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = ['user','lat', 'lng', 'address', 'country', 'city', 'state']
 
 class UpdatePasswordSerializer(serializers.Serializer):
     old_password = serializers.CharField(max_length=120, help_text="old password")

@@ -30,6 +30,7 @@ class UserReportCreateSerializer(serializers.ModelSerializer):
 
 class UserReportListSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
+    user = UserSerializer()
     class Meta:
         model = UserReport
         fields = '__all__'
@@ -42,6 +43,8 @@ class AlertCreateSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class AlertListSerializer(serializers.ModelSerializer):
+    location = LocationSerializer()
+    created_by = UserSerializer()
     location = LocationSerializer()
     class Meta:
 

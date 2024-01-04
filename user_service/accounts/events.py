@@ -13,5 +13,5 @@ CITIZEN_CREATED = "citizen_created"
 CITIZEN_UPDATED = "citizen_updated"
 CITIZEN_DELETED = "citizen_deleted"
 
-LOCATION_CREATED = "location_created"
-LOCATION_UPDATED = "location_updated"
+USER_LOCATION_CREATED = "location_created"
+USER_LOCATION_UPDATED = "location_updated"

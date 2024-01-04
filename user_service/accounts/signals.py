@@ -13,6 +13,7 @@ def create_token_and_notify_other_services(sender, instance, created, **kwargs):
     data = json.dumps(UserSerializer(instance).data)
     if created:
         Token.objects.create(user=instance)
+        Location.objects.create(user=instance)
         fanout_publish(events.USER_CREATED, data, exchange_name="accounts")
     else:
         fanout_publish(events.USER_UPDATED, data, exchange_name="accounts")
@@ -41,9 +42,9 @@ def create_location_and_notify_other_services(sender, instance, created, **kwarg
     data = json.dumps(LocationSerializer(instance).data)
 
     if created:
-        fanout_publish(events.LOCATION_CREATED, data, exchange_name="accounts")
+        fanout_publish(events.USER_LOCATION_CREATED, data, exchange_name="accounts")
     else:
-        fanout_publish(events.LOCATION_UPDATED, data, exchange_name="accounts")
+        fanout_publish(events.USER_LOCATION_UPDATED, data, exchange_name="accounts")
 
 
 @receiver(post_save, sender=Profile)
@@ -58,5 +59,6 @@ def create_profile_and_notify_other_services(sender, instance, created, **kwargs
 
 @receiver(post_delete, sender=User)
 def delete_token_and_notify_other_services(sender, instance, **kwargs):
-    instance.notify_other_services()
-    instance.auth_token.delete()
+
+    data = json.dumps(UserSerializer(instance).data)
+    fanout_publish(events.USER_DELETED, data, exchange_name="accounts")

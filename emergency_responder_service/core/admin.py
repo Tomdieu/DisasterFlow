@@ -25,6 +25,8 @@ class EmergencyResponseTeamAdmin(admin.ModelAdmin):
 
     list_display = ['id','team_name','specialization','is_active','is_verified','created_at']
 
+    readonly_fields = ['is_verified','is_active']
+
 @admin.register(Location)
 class LocationAdmin(LeafletGeoAdmin):
 

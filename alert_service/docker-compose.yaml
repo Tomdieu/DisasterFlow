@@ -14,4 +14,4 @@ services:
 networks:
     bridge:
         driver: bridge
-        name: network
+        name: network 

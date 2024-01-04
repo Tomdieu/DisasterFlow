@@ -19,6 +19,9 @@ class Location(models.Model):
 
 
 class User(models.Model):
+    """
+    This User model represents the citziens in the system only.
+    """
     id = models.BigIntegerField(primary_key=True)
     username = models.CharField(max_length=255)
     email = models.CharField(max_length=255)

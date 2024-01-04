@@ -1,6 +1,8 @@
 import pika,os,json
 import django
 
+from alerts.utils.event_store import create_event_store
+
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "alert_service.settings")
 django.setup()
@@ -25,7 +27,7 @@ channel.queue_declare(queue='alert',durable=True)
 
 fanout_exchange_name = "accounts"
 
-channel.exchange_declare(exchange=fanout_exchange_name, exchange_type='fanout')
+channel.exchange_declare(exchange=fanout_exchange_name, exchange_type='fanout',durable=True)
 
 # Bind queue to the fanout exchange
 
@@ -47,130 +49,168 @@ def callback(ch,method,properties,body):
 
         user = User.objects.create(**data)
 
+        create_event_store(event_type=event_type,data=data)
+
         print(" [+] User Created : ",user)
+
     
     elif event_type == events.CITIZEN_UPDATED:
 
-        user = User.objects.get(id=data.get("id"))
+        if User.objects.filter(id=data.get("id")).exists():
 
-        profile = data.pop("profile",None)
+            user = User.objects.get(id=data.get("id"))
 
-        for key,value in data.items():
-            setattr(user,key,value)
-        
-        user.save()
+            profile = data.pop("profile",None)
 
-        print(" [+] User Updated : ",user)
+            for key,value in data.items():
+                setattr(user,key,value)
+            
+            user.save()
+
+            create_event_store(event_type=event_type,data=data)
+
+            print(" [+] User Updated : ",user)
+
+        else:
+
+            print(" [+] User Does Not Exist")
     
     elif event_type == events.CITIZEN_DELETED:
+        if User.objects.filter(id=data.get("id")).exists():
 
-        user = User.objects.get(id=data.get("id"))
+            user = User.objects.get(id=data.get("id"))
 
-        user.delete()
+            user.delete()
 
-        print(" [+] User Deleted : ",user)
+            create_event_store(event_type=event_type,data=data)
+
+            print(" [+] User Deleted : ",user)
+        
+        else:
+
+            print(" [+] User Does Not Exist")
 
     elif event_type == events.PROFILE_CREATED:
 
-        user = User.objects.get(id=data.get("user"))
-        profile = Profile.objects.create(user=user,**data)
+        if User.objects.filter(id=data.get("id")).exists():
 
-        location = data.pop("location",None)
+            user = User.objects.get(id=data.get("user"))
+            profile = Profile.objects.create(user=user,**data)
 
-        profile = Profile.objects.create(user=user,**data)
+            location = data.pop("location",None)
 
-        print(" [+] Profile Created : ",profile)
+            profile = Profile.objects.create(user=user,**data)
+
+            create_event_store(event_type=event_type,data=data)
+
+            print(" [+] Profile Created : ",profile)
     
     elif event_type == events.PROFILE_UPDATED:
 
-        user = User.objects.get(id=data.get("user"))
-        profile = Profile.objects.get(user=user)
-
-        location = data.pop("location",None)
-
-        for key,value in data.items():
-            setattr(profile,key,value)
+        if User.objects.filter(id=data.get("id")).exists():
         
-        profile.save()
+            user = User.objects.get(id=data.get("user"))
+            profile = Profile.objects.get(user=user)
 
-        print(" [+] Profile Updated : ",profile)
+            location = data.pop("location",None)
 
-    elif event_type == events.LOCATION_CREATED:
+            for key,value in data.items():
+                setattr(profile,key,value)
+            
+            profile.save()
 
-        user = User.objects.get(id=data.get("user"))
+            create_event_store(event_type=event_type,data=data)
 
-        lat = data.pop("lat",0)
-        lng = data.pop("lng",0)
+            print(" [+] Profile Updated : ",profile)
 
-        data.pop("user",None)
+        else:
 
-        point = Point(lng,lat)
+            print(" [+] User Does Not Exist")
 
-        location = Location.objects.create(point=point,**data)
+    elif event_type == events.USER_LOCATION_CREATED:
 
-        profile = Profile.objects.get(user=user)
+        if User.objects.filter(id=data.get("id")).exists():
 
-        profile.location = location
+            user = User.objects.get(id=data.get("user"))
 
-        profile.save()
+            lat = data.pop("lat",0)
+            lng = data.pop("lng",0)
 
-        print(" [+] Location Created : ",location)
+            data.pop("user",None)
+
+            point = Point(lng,lat)
+
+            location = Location.objects.create(point=point,**data)
+
+            profile = Profile.objects.get(user=user)
+
+            profile.location = location
+
+            profile.save()
+
+            create_event_store(event_type=event_type,data=data)
+
+            print(" [+] Location Created : ",location)
+        
+        else:
+
+            print(" [+] User Does Not Exist")
     
-    elif event_type == events.LOCATION_UPDATED:
+    elif event_type == events.USER_LOCATION_UPDATED:
 
-        user = User.objects.get(id=data.get("user"))
+        if User.objects.filter(id=data.get("id")).exists():
 
-        lat = data.pop("lat",0)
-        lng = data.pop("lng",0)
 
-        data.pop("user",None)
+            user = User.objects.get(id=data.get("user"))
 
-        point = Point(lng,lat)
+            lat = data.pop("lat",0)
+            lng = data.pop("lng",0)
 
-        location = Location.objects.get(user=user)
+            data.pop("user",None)
 
-        for key,value in data.items():
-            setattr(location,key,value)
+            point = Point(lng,lat)
+
+            location = Location.objects.get(user=user)
+
+            for key,value in data.items():
+                setattr(location,key,value)
+            
+            if lat != 0 and lng != 0:
+                location.point = point
+            
+            location.save()
+
+            create_event_store(event_type=event_type,data=data)
+
+            print(" [+] Location Updated : ",location)
         
-        if lat != 0 and lng != 0:
-            location.point = point
-        
-        location.save()
+        else:
 
-        print(" [+] Location Updated : ",location)
+            print(" [+] User Does Not Exist")
 
 
-
-
-
-    print("Method : ",method)
-    print("Properties : ",properties)
-    print("Body : ")
+    # print("Method : ",method)
+    # print("Properties : ",properties)
+    # print("Body : ")
 
     print(" [+] New Message Recieve From Alert Queue")
 
 def fanout_callback(ch,method,properties,body):
 
-    print("Method : ",method)
-    print("Properties : ",properties)
-    print("Body : ")
-
     print(" [+] New Message Recieve From Fanout Exchange")
 
-    data = json.loads(body)
-
-    print(data)
+    callback(ch,method,properties,body)
 
 # Setup consumer for `alert`` queue
 
 channel.basic_consume(queue='alert',on_message_callback=callback,auto_ack=True)
 
-# Setup consumer for the fanout exchange
+# # Setup consumer for the fanout exchange
 
-fanout_queue_name = "fanout_alert_queue"
-channel.queue_declare(queue=fanout_queue_name,durable=True)
-channel.basic_consume(queue=fanout_queue_name,on_message_callback=fanout_callback,auto_ack=True)
+# fanout_queue_name = "fanout_alert_queue"
+# channel.queue_declare(queue=fanout_queue_name,durable=True)
+# channel.basic_consume(queue=fanout_queue_name,on_message_callback=fanout_callback,auto_ack=True)
 
 
-print(" [+] Started Consuming")
+print("[*] Waiting for messages. To exit press CTRL+C")
 channel.start_consuming()

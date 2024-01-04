@@ -75,7 +75,7 @@ class Location(models.Model):
     address = models.CharField(max_length=255, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
-    state = models.CharField(max_length=100,null=True,blank=True)
+    state = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return f"{self.lat} - {self.lng}"
@@ -135,6 +135,7 @@ class EmergencyResponder(User):
 
     def accept(self, visitor: Visitor):
         visitor.visit_emergency_responder(self)
+
 
 class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

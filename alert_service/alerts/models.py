@@ -2,6 +2,7 @@
 from django.utils import timezone
 from django.contrib.gis.db import models
 from .disaster_types import TYPES
+import uuid
 
 # Create your models here.
 
@@ -21,13 +22,13 @@ class User(models.Model):
     id = models.BigIntegerField(primary_key=True)
     username = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=255,null=True, blank=True)
     type = models.CharField(max_length=255)
     gender = models.CharField(max_length=255)
-    profile_image = models.CharField(max_length=255)
+    profile_image = models.CharField(max_length=255,null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255,null=True, blank=True)
+    last_name = models.CharField(max_length=255,null=True, blank=True)
 
 
     def __str__(self):
@@ -35,8 +36,8 @@ class User(models.Model):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE,primary_key=True)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE,null=True, blank=True)
     skills = models.CharField(max_length=255)
     interests = models.CharField(max_length=255)
 
@@ -72,7 +73,7 @@ class UserReport(models.Model):
 
     def __str__(self) -> str:
         return f"{self.title} - {self.user.username}"
-
+    
 
 class Alert(models.Model):
     
@@ -101,3 +102,12 @@ class Alert(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.type}"
+
+class Event(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    event_type = models.CharField(max_length=255)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    data = models.JSONField()
+
+    def __str__(self) -> str:
+        return f"{self.event_type} - {self.timestamp}"

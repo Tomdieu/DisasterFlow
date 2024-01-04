@@ -21,15 +21,22 @@ channel = connection.channel()
 
 channel.queue_declare(queue='emergency_responder',durable=True)
 
-# Declare a fanout exchange for the user service
+# Declare a fanout exchange
 
-fanout_exchange_name = "accounts"
+fanout_account_exchange_name = "accounts"
 
-channel.exchange_declare(exchange=fanout_exchange_name, exchange_type='fanout')
+# channel.exchange_declare(exchange=fanout_account_exchange_name, exchange_type='fanout')
+
+# Declare a fanout exchange for the alert service 
+
+fanout_alert_exchange_name = "alerts"
+
+# channel.exchange_declare(exchange=fanout_alert_exchange_name, exchange_type='fanout')
 
 # Bind queue to the fanout exchange
 
-channel.queue_bind(exchange=fanout_exchange_name, queue='emergency_responder')
+channel.queue_bind(exchange=fanout_account_exchange_name, queue='emergency_responder')
+channel.queue_bind(exchange=fanout_alert_exchange_name, queue='emergency_responder')
 
 def callback(ch,method,properties,body):
 
@@ -124,8 +131,12 @@ channel.basic_consume(queue='emergency_responder', on_message_callback=callback,
 
 # Setup Consumer for fanout exchange
 
-fanout_queue_name = "emergency_responder"
-channel.queue_declare(queue=fanout_exchange_name, durable=True)
-channel.basic_consume(queue=fanout_queue_name, on_message_callback=callback, auto_ack=True)
+# fanout_queue_name = "emergency_responder"
+# channel.queue_declare(queue=fanout_account_exchange_name, durable=True)
+# channel.basic_consume(queue=fanout_account_exchange_name, on_message_callback=callback, auto_ack=True)
+# channel.basic_consume(queue=fanout_alert_exchange_name,on_message_callback=callback,auto_ack=True)
 
-print(" [+] Started Consuming")
+
+print(" [*] Waiting for messages. To exit press CTRL+C")
+
+channel.start_consuming()

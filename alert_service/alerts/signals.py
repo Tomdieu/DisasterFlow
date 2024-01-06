@@ -7,7 +7,7 @@ from alerts.utils import determine_severity
 from . import events
 
 from .models import UserReport,Alert,Event,Location
-from api.serializers import AlertListSerializer,UserReportListSerializer
+from alerts.api.serializers import AlertListSerializer,UserReportListSerializer
 from utils.event_store import create_event_store
 
 from utils import Geoapify

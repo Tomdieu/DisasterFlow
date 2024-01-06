@@ -10,6 +10,8 @@ django.setup()
 from core.models import EmergencyResponseTeam,Alert,EmergencyAction,Messages,Resource,EmergencyResponder,Location,Profile
 
 from core import events
+from core.utils import Feature,Properties,Geometry
+from django.contrib.gis.geos import Point
 
 from django.conf import settings
 
@@ -124,6 +126,43 @@ def callback(ch,method,properties,body):
 
             print(" [+] Location Updated For Emergency Responder : ",location)
         print(" [+] The location updated is not for an emergency responder")
+
+    if event_type == events.ALERT_CREATED:
+
+        _location = data.get("location",None)
+        created_by:dict = data.pop("created_by",None)
+
+        def extract(location:dict):
+
+            return Feature(**location)
+
+        if _location:
+
+
+    
+            location =  extract(_location)
+
+            [lng,lat]= location.geometry.coordinates
+
+
+            properties = location.properties
+
+            point = "SRID=4326;POINT({} {})".format(lng,lat)
+
+            location = Location.objects.create(point=point,**location)
+        created_by_user_id = created_by.get('id')
+
+        Alert.objects.create(location=location,created_by=created_by_user_id,**data)
+    
+    elif event_type == events.ALERT_UPDATED:
+
+        location:dict = data.pop("location",None)
+        created_by:dict = data.pop("created_by",None)
+
+
+
+
+    
 
 # Setup consumer for emergency responder
     

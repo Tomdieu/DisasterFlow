@@ -33,7 +33,7 @@ SECRET_KEY = 'django-insecure-kmh0gr9qo00mn%@#&f9%mzk4w-7+e&ieofyo9_@pi)=v*rb9s$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'leaflet',
     'rest_framework_gis',
     'django.contrib.gis',
+    "corsheaders",
+    "drf_yasg",
     
 ]
 

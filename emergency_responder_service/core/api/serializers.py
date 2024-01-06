@@ -72,6 +72,15 @@ class MessagesSerializer(serializers.ModelSerializer):
         model = Messages
         fields = '__all__'
 
+# Serializer for Messages model
+class MessagesListSerializer(serializers.ModelSerializer):
+    team = EmergencyResponseTeamSerializer(read_only=True)
+    sender = EmergencyResponderSerializer(read_only=True)
+
+    class Meta:
+        model = Messages
+        fields = '__all__'
+
 # Serializer for Resource model
 class ResourceSerializer(serializers.ModelSerializer):
     class Meta:

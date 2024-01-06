@@ -45,7 +45,6 @@ class AlertCreateSerializer(serializers.ModelSerializer):
 class AlertListSerializer(serializers.ModelSerializer):
     location = LocationSerializer()
     created_by = UserSerializer()
-    location = LocationSerializer()
     class Meta:
 
         model = Alert

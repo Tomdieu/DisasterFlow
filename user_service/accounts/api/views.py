@@ -16,8 +16,9 @@ from rest_framework.authtoken.models import Token
 User = get_user_model()
 
 from accounts.models import Citizen, EmergencyResponder
-from .serializers import CitizenSerializer, EmergencyResponderSerializer,EmergencyResponderCreateSerializer, \
+from .serializers import CitizenSerializer, EmergencyResponderSerializer, EmergencyResponderCreateSerializer, \
     ProfileSerializer, LoginSerializer, UserSerializer, CitizenListSerializer, EmergencyResponderListSerializer
+
 
 class UserViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     authentication_classes = [TokenAuthentication, SessionAuthentication]
@@ -49,13 +50,14 @@ class CitizenViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin, Gener
     queryset = Citizen.objects.all()
 
     def get_serializer_class(self):
-        if self.action == 'list':
+
+        if self.action in ['list','retrieve']:
             return CitizenListSerializer
         elif self.action in ["profile", "update_profile"]:
             return ProfileSerializer
         return CitizenSerializer
 
-    @action(detail=True, methods=['GET'])
+    @action(detail=True, methods=['get'])
     def profile(self, request, pk=None):
         citizen_object = self.get_object()
         profile = citizen_object.profile
@@ -71,21 +73,16 @@ class CitizenViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin, Gener
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # @action(detail=True, methods=['post'])
-    # def set_password(self, request, pk=None):
-    #     user = self.get_object()
-    #
-
 
 class EmergencyResponderViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
-    authentication_classes = [TokenAuthentication, SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [TokenAuthentication, SessionAuthentication]
+    # permission_classes = [IsAuthenticated]
 
     serializer_class = EmergencyResponderSerializer
     queryset = EmergencyResponder.objects.all()
 
     def get_serializer_class(self):
-        if self.action == 'list':
+        if self.action in ['list', 'retrieve']:
             return EmergencyResponderListSerializer
         elif self.action in ["profile", "update_profile"]:
             return ProfileSerializer
@@ -97,10 +94,6 @@ class EmergencyResponderViewSet(ListModelMixin, RetrieveModelMixin, UpdateModelM
         profile = citizen_object.profile
         serializer = ProfileSerializer(profile)
         return Response(serializer.data, status=status.HTTP_200_OK)
-
-    # @action(detail=True, methods=['post'])
-    # def set_password(self, request, pk=None):
-    #     user = self.get_object()
 
 
 class RegisterEmergencyResponderViewSet(CreateModelMixin, GenericViewSet):

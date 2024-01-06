@@ -35,7 +35,7 @@ SECRET_KEY = 'django-insecure-c(4lg=4qu#kc3)5_mg164q$ts&443e3jdj%jqz+q2pt2m=nh6k
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'django.contrib.gis',
     'leaflet',
     'drf_yasg',
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -181,7 +182,8 @@ LEAFLET_CONFIG = {
 }
 
 # RABBIT MQ CONFIGURATIONS
-RABBITMQ_USERNAME = env('RABBITMQ_USERNAME',default='admin')
-RABBITMQ_PASSWORD = env('RABBITMQ_PASSWORD',default='admin')
-RABBITMQ_HOST = env('RABBITMQ_HOST',default='rabbitmq')
+RABBITMQ_USERNAME = env('RABBITMQ_USERNAME',default='guest')
+RABBITMQ_PASSWORD = env('RABBITMQ_PASSWORD',default='guest')
+RABBITMQ_HOST = env('RABBITMQ_HOST',default='localhost')
 RABBITMQ_VHOST = env('RABBITMQ_VHOST',default='/')
+RABBITMQ_PORT = env('RABBITMQ_PORT',default=5672)

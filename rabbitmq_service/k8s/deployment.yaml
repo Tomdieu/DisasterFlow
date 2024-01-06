@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
         - name: rabbitmq
-          image: rabbitmq:3.10-management-alpine
+          image: rabbitmq:3.12.11-management-alpine
           ports:
             - name: amqp
               containerPort: 5672

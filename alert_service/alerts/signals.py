@@ -1,3 +1,4 @@
+from asgiref.sync import async_to_sync
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.db import transaction
@@ -5,19 +6,45 @@ from django.db import transaction
 from alerts.utils import determine_severity
 from . import events
 
-from .models import UserReport,Alert,Event
+from .models import UserReport,Alert,Event,Location
 from api.serializers import AlertListSerializer,UserReportListSerializer
 from utils.event_store import create_event_store
 
+from utils import Geoapify
+
 from .producer import fanout_publish
+import requests
+
+@receiver(post_save,sender=Location,dispatch_uid="process_location")
+def process_location(sender,instance:Location,created,**kwargs):
+
+    """We are goin to make a backword geocoding base on the latitude and longitude of the location to geoapify"""
+
+    if created:
+
+        async def async_fill_location_detail(instance:Location):
+            geoapify  = Geoapify()
+            response = geoapify.reverse_geocode(instance.point.y,instance.point.x)
+            instance.address = response.results[0].formatted
+            instance.state = response.results[0].state
+            instance.country = response.results[0].country
+            instance.city = response.results[0].city
+            instance.save()
+
+        async_to_sync(async_fill_location_detail)(instance)
+
+        # create_event_store(events.LOCATION_CREATED,LocationSerializer(instance).data)
+        
+
+
 
 @receiver(post_save, sender=UserReport, dispatch_uid="process_report")
 def process_report(sender,instance,created,**kwargs):
 
     if created:
 
-        @transaction.on_commit
-        def async_task(instance:UserReport):
+        
+        async def async_task(instance:UserReport):
             """
             Async Task To Create Alert From User Report
             - Here we are going to create an alert from the user report
@@ -45,7 +72,7 @@ def process_report(sender,instance,created,**kwargs):
             )
 
 
-        async_task(instance)
+        async_to_sync(async_task)(instance)
 
         create_event_store(events.REPORT_CREATED,UserReportListSerializer(instance).data)
     

@@ -6,16 +6,19 @@ from rest_framework import status
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.decorators import action
 
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from alerts.authentication import TokenAuthentication
 
-from alerts.api.serializers import AlertCreateSerializer,AlertListSerializer,UserReportCreateSerializer,UserReportListSerializer
-from alerts.models import Alert,UserReport
+from alerts.api.serializers import AlertCreateSerializer,AlertListSerializer,UserReportCreateSerializer,UserReportListSerializer,LocationSerializer
+from alerts.models import Alert,UserReport,Location
 from alerts.utils.alerts import get_alerts_within_location
 
-# class LocationViewSet(GenericViewSet,CreateModelMixin,UpdateModelMixin,RetrieveModelMixin,ListModelMixin,DestroyModelMixin):
-#     queryset = Location.objects.all()
-#     serializer_class = LocationSerializer
+class LocationViewSet(GenericViewSet,CreateModelMixin,UpdateModelMixin,RetrieveModelMixin,ListModelMixin,DestroyModelMixin):
+    queryset = Location.objects.all()
+    serializer_class = LocationSerializer
 
 class UserReportViewSet(GenericViewSet,CreateModelMixin,UpdateModelMixin,RetrieveModelMixin,ListModelMixin,DestroyModelMixin):
     
@@ -69,6 +72,9 @@ class AlertViewSet(GenericViewSet,CreateModelMixin,UpdateModelMixin,RetrieveMode
             return AlertListSerializer
         return AlertCreateSerializer
 
+    @swagger_auto_schema(manual_parameters=[
+        openapi.Parameter('location', openapi.IN_QUERY, description='Location parameter', type=openapi.TYPE_STRING, required=True),
+    ])
     @action(methods=['GET'],detail=False,url_path='get-alerts-by-location')
     def get_alerts_by_location(self,request):
         location = request.query_params.get('location')
@@ -79,6 +85,9 @@ class AlertViewSet(GenericViewSet,CreateModelMixin,UpdateModelMixin,RetrieveMode
             return Response(serializer.data,status=status.HTTP_200_OK)
         return Response({'message':'location is required'},status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(manual_parameters=[
+        openapi.Parameter('user_id', openapi.IN_QUERY, description='User ID parameter', type=openapi.TYPE_INTEGER, required=True),
+    ])
     @action(methods=['GET'],detail=False,url_path='get-alerts-by-user')
     def get_alerts_by_user(self,request):   
         user_id = request.query_params.get('user_id')
@@ -88,6 +97,10 @@ class AlertViewSet(GenericViewSet,CreateModelMixin,UpdateModelMixin,RetrieveMode
             return Response(serializer.data,status=status.HTTP_200_OK)
         return Response({'message':'user_id is required'},status=status.HTTP_400_BAD_REQUEST)
 
+    @swagger_auto_schema(manual_parameters=[
+        openapi.Parameter('location', openapi.IN_QUERY, description='Location parameter', type=openapi.TYPE_STRING, required=True),
+        openapi.Parameter('user_id', openapi.IN_QUERY, description='User ID parameter', type=openapi.TYPE_INTEGER, required=True),
+    ])
     @action(methods=['GET'],detail=False,url_path='get-alerts-by-location-and-user')
     def get_alerts_by_location_and_user(self,request):
         location = request.query_params.get('location')

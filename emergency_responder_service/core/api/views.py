@@ -9,15 +9,17 @@ from rest_framework.mixins import (
 from rest_framework.viewsets import GenericViewSet
 
 from rest_framework.decorators import action
-from rest_framework import status
 
-from django.http import HttpRequest
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
+
+from rest_framework import status
 
 from rest_framework.permissions import IsAuthenticated
 from core.authentication import TokenAuthentication
 
 from core.models import EmergencyResponder, EmergencyResponseTeam,Resource,Alert,EmergencyAction,Messages
-from api.serializers import (
+from .serializers import (
     EmergencyResponderSerializer,
     CreateEmergencyResponseTeamSerializer,
     EmergencyResponseTeamSerializer,
@@ -31,7 +33,7 @@ from api.serializers import (
 )
 
 
-class EmergencyResponseViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
+class EmergencyResponderViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     serializer_class = EmergencyResponderSerializer
     queryset = EmergencyResponder.objects.all()
     authentication_classes = [TokenAuthentication]
@@ -61,6 +63,18 @@ class EmergencyResponseTeamViewSet(
             return AddOrRemoveMemberSerializer
         elif self.action == "remove_member":
             return AddOrRemoveMemberSerializer
+        elif self.action == "add_resource":
+            return ResourceCreateSerializer
+        elif self.action == "update_resource":
+            return ResourceSerializer
+        elif self.action == "emergency_action":
+            return EmergencyActionSerializer
+        elif self.action == "emergency_actions":
+            return EmergencyActionSerializer
+        elif self.action == "messages":
+            return MessagesSerializer
+        elif self.action == "send_message":
+            return MessagesSerializer
     
     def destroy(self, request, *args, **kwargs):
         team = self.get_object()
@@ -71,6 +85,11 @@ class EmergencyResponseTeamViewSet(
 
     @action(detail=True, methods=["post"], url_path="add-member")
     def add_member(self, request, pk=None):
+
+        """
+        This route is use to add a new member to an emergency responder team
+        """
+        
         team = self.get_object()
         serializer = AddOrRemoveMemberSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -87,6 +106,10 @@ class EmergencyResponseTeamViewSet(
 
     @action(detail=True, methods=["post"], url_path="remove-member")
     def remove_member(self, request, pk=None):
+        """
+        This roiute is use to remove a member from an emergency responder team
+        """
+
         team = self.get_object()
         serializer = AddOrRemoveMemberSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -102,6 +125,9 @@ class EmergencyResponseTeamViewSet(
 
     @action(detail=True, methods=["post"], url_path="add-resource")
     def add_resource(self, request, pk=None):
+        """
+        This route is use to add a resource to an Emergency Responder Team
+        """
         
         team = self.get_object()
         serializer = ResourceCreateSerializer(data=request.data)
@@ -114,7 +140,8 @@ class EmergencyResponseTeamViewSet(
 
     @action(detail=True, methods=["post"], url_path="remove-resource")
     def remove_resource(self, request, pk=None):
-        
+        """This Route is use to remove a resource from an emergency responder team"""
+
         team = self.get_object()
         serializer = RemoveResourceSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -126,7 +153,7 @@ class EmergencyResponseTeamViewSet(
 
     @action(detail=True, methods=["put","patch"], url_path="update-resource")
     def update_resource(self, request, pk=None):
-
+        """This route is use to update the resource from an emergency responder team"""
         team = self.get_object()
         serializer = ResourceSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -144,7 +171,7 @@ class EmergencyResponseTeamViewSet(
 
     @action(detail=True, methods=["post"], url_path="emergency-action")
     def emergency_action(self, request, pk=None):
-        
+        """This route is use to take an action by an emergency responder team base on an alert"""
         team = self.get_object()
         request.data["team"] = team.id
         serializer = EmergencyActionSerializer(data=request.data)
@@ -153,20 +180,41 @@ class EmergencyResponseTeamViewSet(
 
         return Response({"detail": "Emergency Action created","data":serializer.data},status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=["get"], url_path="messages")
-    def messages(self, request, pk=None):
-        
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('status',openapi.IN_QUERY,description="status of the emergency action either in `In Progress`,`Completed`, or `Cancelled`",type=openapi.TYPE_INTEGER,required=False)
+        ]
+    )
+    @action(detail=True,methods=['get'],url_path='emergency-actions')
+    def emergency_actions(self,request,pk=None):
+        """This route is use to list all the emergency actions taken by a team"""
+
         team = self.get_object()
-        messages = Messages.objects.filter(team=team)
-        serializer = MessagesSerializer(messages, many=True)
+        status = request.query_params.get('status')
+        emergency_actions = []
+        if status:
+            emergency_actions = EmergencyAction.objects.filter(team=team,status=status)
+        else:
+            emergency_actions = EmergencyAction.objects.filter(team=team)
+        serializer = EmergencyActionSerializer(emergency_actions,many=True,context={'request':request})
+
         return Response(serializer.data,status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=["post"], url_path="messages")
+    @swagger_auto_schema(responses={200: MessagesSerializer(many=True)})
+    @action(detail=True, methods=["get"], url_path="messages")
+    def messages(self, request, pk=None):
+        """This route is use to list all the messages from an emergency reponder team"""
+        team = self.get_object()
+        messages = Messages.objects.filter(team=team)
+        serializer = MessagesSerializer(messages, many=True,context={'request':request})
+        return Response(serializer.data,status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=["post"], url_path="send-messages")
     def send_message(self, request, pk=None):
-        
+        "This route is use to send message in an emergency responder chat"
         team = self.get_object()
         request.data["team"] = team.id
-        serializer = MessagesSerializer(data=request.data)
+        serializer = MessagesSerializer(data=request.data,context={'request':request})
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
@@ -190,3 +238,4 @@ class EmergencyActionViewSet(
 ):
     queryset = EmergencyAction.objects.all()
     serializer_class = EmergencyActionSerializer
+    

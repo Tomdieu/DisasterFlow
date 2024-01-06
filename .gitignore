@@ -22,3 +22,6 @@ db.sqlite3
 
 **/migrations/*
 !**/migrations/__init__.py
+
+rabbitmq
+__pycache__

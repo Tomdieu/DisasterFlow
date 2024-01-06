@@ -3,7 +3,7 @@ from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from .models import User, Citizen, EmergencyResponder, Location, Profile, Event
 from .producer import fanout_publish
-from api.serializers import UserSerializer, ProfileSerializer, LocationSerializer
+from accounts.api.serializers import UserSerializer, ProfileSerializer, LocationSerializer
 from . import events
 import json
 

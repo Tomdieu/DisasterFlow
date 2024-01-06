@@ -1,8 +1,6 @@
 import pika,os,json
 import django
 
-from alerts.utils.event_store import create_event_store
-
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "alert_service.settings")
 django.setup()
@@ -13,10 +11,16 @@ from django.contrib.gis.geos import Point
 
 from alerts.models import User,Profile,Location
 
+from alerts.utils.event_store import create_event_store
+
+
 from alerts import events
 
-credentials = pika.PlainCredentials(settings.RABBITMQ_USERNAME, settings.RABBITMQ_PASSWORD)
-parameters = pika.ConnectionParameters(settings.RABBITMQ_HOST, settings.RABBITMQ_PORT, settings.RABBITMQ_VHOST, credentials)
+
+# credentials = pika.PlainCredentials(settings.RABBITMQ_USERNAME, settings.RABBITMQ_PASSWORD)
+# parameters = pika.ConnectionParameters(settings.RABBITMQ_HOST, settings.RABBITMQ_PORT, settings.RABBITMQ_VHOST, credentials)
+credentials = pika.PlainCredentials("guest", "guest")
+parameters = pika.ConnectionParameters("localhost", 5672, "/", credentials)
 connection = pika.BlockingConnection(parameters)
 
 channel = connection.channel()
@@ -27,7 +31,7 @@ channel.queue_declare(queue='alert',durable=True)
 
 fanout_exchange_name = "accounts"
 
-channel.exchange_declare(exchange=fanout_exchange_name, exchange_type='fanout',durable=True)
+# channel.exchange_declare(exchange=fanout_exchange_name, exchange_type='fanout',durable=True)
 
 # Bind queue to the fanout exchange
 

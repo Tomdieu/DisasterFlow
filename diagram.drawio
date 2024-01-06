@@ -1,0 +1,157 @@
+<mxfile host="65bd71144e">
+    <diagram id="-gVsUIw0QU-7bRN-JrNH" name="Page-1">
+        <mxGraphModel dx="955" dy="773" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" background="none" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-2" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="50" y="120" width="330" height="290" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-3" value="User" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="155" y="150" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-4" value="Emergency Responder" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="70" y="260" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-5" value="Citizen" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="240" y="300" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-6" value="Extends" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;exitX=0.317;exitY=-0.05;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="6WmV2zaJYSHedq_CqUBI-4" target="6WmV2zaJYSHedq_CqUBI-3" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="300" y="440" as="sourcePoint"/>
+                        <mxPoint x="460" y="440" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-7" value="Extends" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;" parent="1" source="6WmV2zaJYSHedq_CqUBI-5" target="6WmV2zaJYSHedq_CqUBI-3" edge="1">
+                    <mxGeometry width="160" relative="1" as="geometry">
+                        <mxPoint x="310" y="450" as="sourcePoint"/>
+                        <mxPoint x="234.80769230769238" y="220" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-8" value="User Service" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="150" y="370" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-9" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="414" y="120" width="386" height="300" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-10" value="Citizen" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="430" y="300" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-11" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" source="6WmV2zaJYSHedq_CqUBI-5" target="6WmV2zaJYSHedq_CqUBI-10" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="350" y="460" as="sourcePoint"/>
+                        <mxPoint x="400" y="410" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-12" value="UserReport" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="490" y="160" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-13" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" source="6WmV2zaJYSHedq_CqUBI-10" target="6WmV2zaJYSHedq_CqUBI-12" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="350" y="460" as="sourcePoint"/>
+                        <mxPoint x="400" y="410" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-14" value="systen process the user report and create an alert" style="endArrow=classic;html=1;rounded=0;" parent="1" source="6WmV2zaJYSHedq_CqUBI-12" target="6WmV2zaJYSHedq_CqUBI-15" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="350" y="460" as="sourcePoint"/>
+                        <mxPoint x="400" y="410" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-15" value="Alert" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="630" y="300" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-16" value="Alert Service" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="530" y="380" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-17" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="400" y="470" width="670" height="510" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-18" value="Emergency Responder" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="547" y="930" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-22" value="create a team" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="6WmV2zaJYSHedq_CqUBI-19" target="6WmV2zaJYSHedq_CqUBI-21" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="470" y="580"/>
+                            <mxPoint x="470" y="580"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-19" value="Emergency Responder" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="410" y="470" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-20" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" source="6WmV2zaJYSHedq_CqUBI-4" target="6WmV2zaJYSHedq_CqUBI-19" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="370" y="340" as="sourcePoint"/>
+                        <mxPoint x="440" y="340" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="130" y="500"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-24" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="6WmV2zaJYSHedq_CqUBI-21" target="6WmV2zaJYSHedq_CqUBI-23" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="700" y="660"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-26" value="have chats" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" parent="1" source="6WmV2zaJYSHedq_CqUBI-21" target="6WmV2zaJYSHedq_CqUBI-25" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-21" value="Emergency Responder Team" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="414" y="620" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-35" value="get the resource needed to interven" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#0A0A0A;exitX=0.467;exitY=0.833;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="6WmV2zaJYSHedq_CqUBI-31" target="6WmV2zaJYSHedq_CqUBI-23" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="870" y="810"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-23" value="Resources" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="665" y="810" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-25" value="Chats" style="whiteSpace=wrap;html=1;rounded=1;" parent="1" vertex="1">
+                    <mxGeometry x="414" y="800" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-34" value="an emergency action is due to an alert" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontColor=#0A0A0A;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" parent="1" source="6WmV2zaJYSHedq_CqUBI-31" target="6WmV2zaJYSHedq_CqUBI-28" edge="1">
+                    <mxGeometry x="-0.3778" y="-15" relative="1" as="geometry">
+                        <Array as="points">
+                            <mxPoint x="875" y="510"/>
+                        </Array>
+                        <mxPoint as="offset"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-28" value="Alert" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="630" y="480" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-30" value="" style="endArrow=classic;html=1;rounded=0;" parent="1" source="6WmV2zaJYSHedq_CqUBI-15" target="6WmV2zaJYSHedq_CqUBI-28" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="350" y="550" as="sourcePoint"/>
+                        <mxPoint x="400" y="500" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-31" value="&lt;div style=&quot;font-family: &amp;quot;fira code&amp;quot; , &amp;quot;droid sans mono&amp;quot; , &amp;quot;monospace&amp;quot; , monospace ; font-weight: normal ; font-size: 15px ; line-height: 20px&quot;&gt;Emergency Actions&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                    <mxGeometry x="800" y="600" width="150" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-36" value="&lt;font color=&quot;#ffffff&quot;&gt;an emergency action is carry out by a team&lt;/font&gt;" style="endArrow=classic;html=1;rounded=0;fontColor=#0A0A0A;" parent="1" source="6WmV2zaJYSHedq_CqUBI-31" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="530" y="640" as="sourcePoint"/>
+                        <mxPoint x="530" y="640" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-37" value="Geoapify" style="rounded=0;whiteSpace=wrap;html=1;labelBackgroundColor=#FFFFFF;fontColor=#0A0A0A;" parent="1" vertex="1">
+                    <mxGeometry x="1200" y="600" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="6WmV2zaJYSHedq_CqUBI-38" value="&lt;font color=&quot;#ffffff&quot;&gt;gets the path to the disaster&lt;/font&gt;" style="endArrow=classic;html=1;rounded=0;fontColor=#0A0A0A;" parent="1" source="6WmV2zaJYSHedq_CqUBI-37" target="6WmV2zaJYSHedq_CqUBI-31" edge="1">
+                    <mxGeometry width="50" height="50" relative="1" as="geometry">
+                        <mxPoint x="730" y="640" as="sourcePoint"/>
+                        <mxPoint x="780" y="590" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

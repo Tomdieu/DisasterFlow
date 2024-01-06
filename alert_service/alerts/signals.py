@@ -1,19 +1,17 @@
 from asgiref.sync import async_to_sync
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.db import transaction
 
 from alerts.utils import determine_severity
 from . import events
 
-from .models import UserReport,Alert,Event,Location
+from .models import UserReport,Alert,Location
 from alerts.api.serializers import AlertListSerializer,UserReportListSerializer
-from utils.event_store import create_event_store
+from alerts.utils.event_store import create_event_store
 
-from utils import Geoapify
+from alerts.utils import Geoapify
 
 from .producer import fanout_publish
-import requests
 
 @receiver(post_save,sender=Location,dispatch_uid="process_location")
 def process_location(sender,instance:Location,created,**kwargs):

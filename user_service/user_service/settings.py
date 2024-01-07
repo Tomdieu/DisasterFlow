@@ -176,3 +176,6 @@ IPINFO_SETTINGS = {
 IPINFO_FILTER = lambda request: request.scheme == 'http'
 
 # IPINFO_IP_SELECTOR = my_custom_ip_selector_implementation
+
+
+BOOTSRAP_SERVERS = env('BOOTSRAP_SERVERS',default='localhost:9092')

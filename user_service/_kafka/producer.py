@@ -2,6 +2,7 @@ import json
 from typing import Any
 import logging
 from kafka import KafkaProducer
+from django.conf import settings
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -10,7 +11,7 @@ def publish(event_type: str, body: Any):
     producer = None
     try:
         producer = KafkaProducer(
-            bootstrap_servers='localhost:9092',
+            bootstrap_servers=settings.BOOTSRAP_SERVERS,
             value_serializer=lambda v: json.dumps(v).encode('utf-8')
         )
 

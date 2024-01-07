@@ -8,6 +8,7 @@ GEOAPIFY_API_KEY = settings.GEOAPIFY_API_KEY
 class Geoapify:
 
     def __init__(self, api_key=None):
+        global GEOAPIFY_API_KEY
         self.api_key = api_key or GEOAPIFY_API_KEY
 
     def forward_geocode(self, location:str) -> GeoapifyResponse:

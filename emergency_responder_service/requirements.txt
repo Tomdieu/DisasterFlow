@@ -11,3 +11,4 @@ django-environ==0.11.2
 mapbox==0.18.1
 kafka-python==2.0.2
 confluent-kafka==2.3.0
+eventsourcing==9.2.21

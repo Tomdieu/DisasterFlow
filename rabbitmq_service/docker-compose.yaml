@@ -1,12 +1,25 @@
-version: '3.8'
+version: '3.2'
 
 services:
   rabbitmq:
     image: rabbitmq:3.10-management-alpine
     container_name: rabbitmq
     ports:
-      - "15672:15672"
-      - "5672:5672"
+      - 5672:5672
+      - 15672:15672
     volumes:
-      - ./rabbitmq/data:/var/lib/rabbitmq/mnesia
-      - ./rabbitmq/config:/etc/rabbitmq
+      - rabbitmq-data:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    networks:
+      - default
+    restart: unless-stopped
+
+networks:
+  default:
+    driver: bridge
+
+volumes:
+  rabbitmq-data:
+    driver: local

@@ -185,8 +185,8 @@ BOOTSRAP_SERVERS = env('BOOTSRAP_SERVERS',default='localhost:9092')
 
 # CELERY CONFIGURATIONS
 
-CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Use the appropriate broker URL for your setup
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # Use the appropriate result backend URL for your setup
+# CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Use the appropriate broker URL for your setup
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # Use the appropriate result backend URL for your setup
 
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'

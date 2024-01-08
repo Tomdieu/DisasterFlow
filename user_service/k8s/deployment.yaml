@@ -46,4 +46,45 @@ spec:
               memory: "256Mi"
               cpu: "250m"
       restartPolicy: Always
-      
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: celery
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: celery
+  template:
+    metadata:
+      labels:
+        app: celery
+    spec:
+      containers:
+        - name: celery
+          image: ghcr.io/tomdieu/disasterflow/user:latest
+          command: ["celery", "-A", "user_service", "worker", "--beat", "--scheduler", "django", "--loglevel=info"]
+          env:
+            - name: DEBUG
+              value: "True"
+            - name: CELERY_BROKER_URL
+              value: "redis://redis:6379/0"
+            - name: CELERY_RESULT_BACKEND
+              value: "redis://redis:6379/0"
+          volumeMounts:
+            - name: account-service-volume
+              mountPath: /account_service
+          resources:
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+            requests:
+              memory: "256Mi"
+              cpu: "250m"
+      volumes:
+        - name: account-service-volume
+          hostPath:
+            path: ./  # Update this path to your local directory

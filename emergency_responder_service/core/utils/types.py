@@ -8,7 +8,7 @@ class Geometry:
 
 @dataclass
 class Point:
-    type: str = "Point"
+    type: str
     coordinates: Tuple[float, float]
 
 @dataclass

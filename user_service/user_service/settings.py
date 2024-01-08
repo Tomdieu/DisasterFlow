@@ -177,5 +177,24 @@ IPINFO_FILTER = lambda request: request.scheme == 'http'
 
 # IPINFO_IP_SELECTOR = my_custom_ip_selector_implementation
 
+# KAFKA CONFIGURATIONS
+
 
 BOOTSRAP_SERVERS = env('BOOTSRAP_SERVERS',default='localhost:9092')
+
+
+# CELERY CONFIGURATIONS
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'  # Use the appropriate broker URL for your setup
+CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'  # Use the appropriate result backend URL for your setup
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+
+# CELERY RABBMITMQ CONFIGURATIONS
+
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'  # Replace with your RabbitMQ connection details
+CELERY_RESULT_BACKEND = 'rpc://'  # Recommended for real-world production use

@@ -4,7 +4,9 @@ import pika
 import json
 
 from django.conf import settings
+import  logging
 
+logging.basicConfig(level=logging.INFO)
 
 def publish(method: str, body: Any, routing_keys: list[str]):
     try:
@@ -41,7 +43,7 @@ def fanout_publish(method: str, body: Any, exchange_name: str = "accounts"):
         connection = pika.BlockingConnection(paramters)
         channel = connection.channel()
 
-        channel.exchange_declare(exchange=exchange_name, exchange_type="fanout",durable=True)
+        channel.exchange_declare(exchange=exchange_name, exchange_type="topic",durable=True)
 
         data: dict = {
             "type": method,
@@ -52,7 +54,7 @@ def fanout_publish(method: str, body: Any, exchange_name: str = "accounts"):
 
         body = json.dumps(data,indent=4).encode('utf-8')
 
-        channel.basic_publish(exchange=exchange_name, routing_key="", body=body,
+        channel.basic_publish(exchange=exchange_name, routing_key="accounts.*", body=body,
                               properties=properties)
         print("[x] Sent message to fanout exchange")
         connection.close()

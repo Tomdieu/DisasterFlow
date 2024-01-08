@@ -8,75 +8,89 @@ from . import events
 import json
 from _kafka import publish
 
+from celery import shared_task
 
-@receiver(post_save, sender=User)
+
+@shared_task
+def publish_message(event_type, data, exchange_name="accounts"):
+    publish(events.USER_CREATED, data)
+    fanout_publish(events.USER_CREATED, data, exchange_name="accounts")
+
+
+@receiver(post_save, sender=User, dispatch_uid='create-token-profile-location')
 def create_token_and_notify_other_services(sender, instance, created, **kwargs):
     data = UserSerializer(instance).data
     if created:
         Token.objects.create(user=instance)
         Location.objects.create(user=instance)
-        publish(events.USER_CREATED, data)
-        fanout_publish(events.USER_CREATED, data, exchange_name="accounts")
+        Profile.objects.create(user=instance)
+
+        # publish(events.USER_CREATED, data)
+        # fanout_publish(events.USER_CREATED, data, exchange_name="accounts")
+        publish_message.delay(events.USER_CREATED, data)
     else:
-        publish(events.USER_UPDATED, data)
-        fanout_publish(events.USER_UPDATED, data, exchange_name="accounts")
+        publish_message.delay(events.USER_UPDATED, data)
+        # publish(events.USER_UPDATED, data)
+        # fanout_publish(events.USER_UPDATED, data, exchange_name="accounts")
 
 
-@receiver(post_save, sender=Citizen)
+@receiver(post_save, sender=Citizen, dispatch_uid='create-citizen')
 def notify_other_services(sender, instance, created, **kwargs):
     data = UserSerializer(instance).data
     if created:
-        publish(events.CITIZEN_CREATED, data)
-        fanout_publish(events.CITIZEN_CREATED, data, exchange_name="accounts")
+        # publish(events.CITIZEN_CREATED, data)
+        # fanout_publish(events.CITIZEN_CREATED, data, exchange_name="accounts")
+        publish_message.delay(events.CITIZEN_CREATED, data)
     else:
-        publish(events.CITIZEN_UPDATED, data)
-        fanout_publish(events.CITIZEN_UPDATED, data, exchange_name="accounts")
+        # publish(events.CITIZEN_UPDATED, data)
+        # fanout_publish(events.CITIZEN_UPDATED, data, exchange_name="accounts")
+        publish_message.delay(events.CITIZEN_UPDATED, data)
 
 
-@receiver(post_save, sender=EmergencyResponder)
+@receiver(post_save, sender=EmergencyResponder, dispatch_uid='create-emergency-responder')
 def notify_other_services(sender, instance, created, **kwargs):
     data = UserSerializer(instance).data
     if created:
-        publish(events.EMERGENCY_RESPONDER_CREATED, data)
-
-        fanout_publish(events.EMERGENCY_RESPONDER_CREATED, data, exchange_name="accounts")
+        # publish(events.EMERGENCY_RESPONDER_CREATED, data)
+        # fanout_publish(events.EMERGENCY_RESPONDER_CREATED, data, exchange_name="accounts")
+        publish_message.delay(events.EMERGENCY_RESPONDER_CREATED, data)
     else:
-        publish(events.EMERGENCY_RESPONDER_UPDATED, data)
+        # publish(events.EMERGENCY_RESPONDER_UPDATED, data)
+        # fanout_publish(events.EMERGENCY_RESPONDER_UPDATED, data, exchange_name="accounts")
+        publish_message.delay(events.EMERGENCY_RESPONDER_UPDATED, data)
 
-        fanout_publish(events.EMERGENCY_RESPONDER_UPDATED, data, exchange_name="accounts")
 
-
-@receiver(post_save, sender=Location)
+@receiver(post_save, sender=Location, dispatch_uid='create-location')
 def create_location_and_notify_other_services(sender, instance, created, **kwargs):
     data = LocationSerializer(instance).data
 
     if created:
-        publish(events.USER_LOCATION_CREATED, data)
-
-        fanout_publish(events.USER_LOCATION_CREATED, data, exchange_name="accounts")
+        # publish(events.USER_LOCATION_CREATED, data)
+        # fanout_publish(events.USER_LOCATION_CREATED, data, exchange_name="accounts")
+        publish_message.delay(events.USER_LOCATION_CREATED, data)
     else:
-        publish(events.USER_LOCATION_UPDATED, data)
+        # publish(events.USER_LOCATION_UPDATED, data)
+        # fanout_publish(events.USER_LOCATION_UPDATED, data, exchange_name="accounts")
+        publish_message.delay(events.USER_LOCATION_UPDATED, data)
 
-        fanout_publish(events.USER_LOCATION_UPDATED, data, exchange_name="accounts")
 
-
-@receiver(post_save, sender=Profile)
+@receiver(post_save, sender=Profile, dispatch_uid='create-profile')
 def create_profile_and_notify_other_services(sender, instance, created, **kwargs):
     data = ProfileSerializer(instance).data
 
     if created:
-        publish(events.PROFILE_CREATED, data)
-
-        fanout_publish(events.PROFILE_CREATED, data, exchange_name="accounts")
+        # publish(events.PROFILE_CREATED, data)
+        # fanout_publish(events.PROFILE_CREATED, data, exchange_name="accounts")
+        publish_message.delay(events.PROFILE_CREATED, data)
     else:
-        publish(events.PROFILE_UPDATED, data)
+        # publish(events.PROFILE_UPDATED, data)
+        # fanout_publish(events.PROFILE_UPDATED, data, exchange_name="accounts")
+        publish_message.delay(events.PROFILE_UPDATED, data)
 
-        fanout_publish(events.PROFILE_UPDATED, data, exchange_name="accounts")
 
-
-@receiver(post_delete, sender=User)
+@receiver(post_delete, sender=User, dispatch_uid='delete-token')
 def delete_token_and_notify_other_services(sender, instance, **kwargs):
-
     data = UserSerializer(instance).data
-    fanout_publish(events.USER_DELETED, data, exchange_name="accounts")
-    publish(events.USER_DELETED, data)
+    # fanout_publish(events.USER_DELETED, data, exchange_name="accounts")
+    # publish(events.USER_DELETED, data)
+    publish_message.delay(events.USER_DELETED, data)

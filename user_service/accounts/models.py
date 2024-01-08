@@ -117,8 +117,6 @@ SPECIALIZATION_CHOICES = [
 
 
 class EmergencyResponder(User):
-    emergency_contact_number = models.CharField(max_length=20, blank=True, null=True)
-    emergency_contact_person = models.CharField(max_length=255, blank=True, null=True)
     is_verified = models.BooleanField(default=False)
     specialization = models.CharField(max_length=255, choices=SPECIALIZATION_CHOICES, null=True, blank=True)
 

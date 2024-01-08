@@ -67,8 +67,9 @@ class UserReport(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
-    description = models.TextField()
+    description = models.TextField(blank=True,null=True)
     type = models.CharField(max_length=255, choices=TYPES)
+    image = models.ImageField(upload_to='reports_image/', null=True, blank=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
     impact = models.CharField(max_length=255, choices=IMPACT,default="low")
@@ -80,7 +81,6 @@ class UserReport(models.Model):
 
 class Alert(models.Model):
     
-
     SEVERITY = [
         ("low", "Low"),
         ("moderate", "Moderate"),
@@ -101,6 +101,7 @@ class Alert(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    report = models.ForeignKey(UserReport, on_delete=models.CASCADE)
     audience = models.CharField(max_length=20, choices=AUDIENCE_CHOICES)
 
     def __str__(self):

@@ -1,6 +1,6 @@
-import json, os, django
+from kafka import KafkaConsumer
+import os, django
 from json import loads
-import logging
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "alert_service.settings")
 django.setup()
@@ -12,11 +12,6 @@ from alerts.models import User, Profile, Location
 from alerts.utils.event_store import create_event_store
 from alerts import events
 
-from kafka import KafkaConsumer
-from time import sleep
-
-
-logging.basicConfig(level=logging.INFO)
 
 def process_message(event_type: str, data: dict):
     if event_type == events.CITIZEN_CREATED:
@@ -145,9 +140,7 @@ def process_message(event_type: str, data: dict):
         else:
             print(" [+] User Does Not Exist")
 
-
 def consume(topics: list[str]):
-    
     consumer = KafkaConsumer(
         bootstrap_servers=["localhost:9092"],
         auto_offset_reset="earliest",
@@ -158,47 +151,35 @@ def consume(topics: list[str]):
 
     consumer.subscribe(topics)
 
+    print("[+] Starting Kafka Consumer")
+
     try:
         while True:
-            
-            logging.info(" [*] Waiting for messages. To exit press CTRL+C")
-            
-            message = consumer.poll(1000)
 
-            if message:
-                
-                if message is None:
-                    continue
+            records = consumer.poll(timeout_ms=1000)
 
-                for topic, messages in message.items():
-                    logging.info(f"Processing messages for topic {topic}")
+            for tp, messages in records.items():
+                print(f"Processing messages for topic {tp}")
+                for message in messages:
+                    print(f"Processing message: {message.value}")
+                    message_value: dict = message.value
+                    topic: str = message.topic
+                    key: str = message.key
 
-                    # print("Topic : ",topic, " Messages : ",messages)
+                    event_type: str = message_value.get("type")
+                    data: dict = message_value.get("data")
 
-                    for msg in messages:
-                        
-                        message_data = msg.value
+                    # process_message(event_type=event_type, data=data)
 
-                        topic:str = msg.topic
-
-                        key:str = msg.key
-
-                        event_type:str = message_data.get("type",None)
-                        data:dict = message_data.get("data",None)
-
-                        print("Even Type : ",event_type," Data : ",data)
-
-                        # process_message(event_type=event_type,data=data)
-
-                        print(" [+] Message Consumed : ", msg.value)
-            
-
+                    print("Message : ", message_value)
+        
+                    # consumer.commit()   
     except KeyboardInterrupt:
-        logging.info("[-] Stopping Consumer")
         print("\n[!] Keyboard interrupt received. Closing Kafka consumer.")
+
     finally:
-        logging.info("[-] Closing Consumer")
         consumer.close()
 
 if __name__ == "__main__":
+    
     consume(["users"])

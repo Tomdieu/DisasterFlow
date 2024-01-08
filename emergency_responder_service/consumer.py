@@ -21,24 +21,22 @@ connection = pika.BlockingConnection(parameters)
 
 channel = connection.channel()
 
-channel.queue_declare(queue='emergency_responder',durable=True)
+queue_name = "emergency_responder_queue"
+
+channel.queue_declare(queue=queue_name,durable=True)
 
 # Declare a fanout exchange
 
-fanout_account_exchange_name = "accounts"
+fanout_exchanges = ["accounts","alerts"]
 
-# channel.exchange_declare(exchange=fanout_account_exchange_name, exchange_type='fanout')
+for exchange in fanout_exchanges:
 
-# Declare a fanout exchange for the alert service 
-
-fanout_alert_exchange_name = "alerts"
-
-# channel.exchange_declare(exchange=fanout_alert_exchange_name, exchange_type='fanout')
+    channel.exchange_declare(exchange=exchange,exchange_type="fanout",durable=True)
 
 # Bind queue to the fanout exchange
 
-channel.queue_bind(exchange=fanout_account_exchange_name, queue='emergency_responder')
-channel.queue_bind(exchange=fanout_alert_exchange_name, queue='emergency_responder')
+for exchange in fanout_exchanges:
+    channel.queue_bind(exchange=exchange, queue=queue_name)
 
 def callback(ch,method,properties,body):
 
@@ -162,18 +160,9 @@ def callback(ch,method,properties,body):
 
 
 
+# Setup consumer for emergency responder queue
     
-
-# Setup consumer for emergency responder
-    
-channel.basic_consume(queue='emergency_responder', on_message_callback=callback, auto_ack=True)
-
-# Setup Consumer for fanout exchange
-
-# fanout_queue_name = "emergency_responder"
-# channel.queue_declare(queue=fanout_account_exchange_name, durable=True)
-# channel.basic_consume(queue=fanout_account_exchange_name, on_message_callback=callback, auto_ack=True)
-# channel.basic_consume(queue=fanout_alert_exchange_name,on_message_callback=callback,auto_ack=True)
+channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=False)
 
 
 print(" [*] Waiting for messages. To exit press CTRL+C")

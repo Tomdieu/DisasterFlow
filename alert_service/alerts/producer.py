@@ -16,7 +16,7 @@ def fanout_publish(method: str, body: Any, exchange_name: str = "alerts"):
         connection = pika.BlockingConnection(paramters)
         channel = connection.channel()
 
-        channel.exchange_declare(exchange=exchange_name, exchange_type="fanout")
+        channel.exchange_declare(exchange=exchange_name, exchange_type="fanout",durable=True)
 
         data: dict = {
             "type": method,

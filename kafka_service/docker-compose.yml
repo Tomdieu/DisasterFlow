@@ -3,6 +3,7 @@ services:
   zookeeper:
     image: wurstmeister/zookeeper:latest
     container_name: zookeeper
+    restart: unless-stopped
     ports:
       - "2181:2181"
     networks:
@@ -15,6 +16,7 @@ services:
       - zookeeper
     ports:
       - "9092:9092"
+    restart: unless-stopped
     environment:
       KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT

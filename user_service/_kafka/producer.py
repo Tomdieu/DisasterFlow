@@ -4,7 +4,7 @@ import logging
 from kafka import KafkaProducer
 from django.conf import settings
 
-logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
 
 
 def publish(event_type: str, body: Any):
@@ -22,13 +22,14 @@ def publish(event_type: str, body: Any):
 
         message = json.dumps(data)
 
-        producer.send(topic,key=event_type, value=message)
+        producer.send(topic, key=event_type, value=message)
         producer.flush()
 
-        logging.info(" [+] Message Published : %s", message)
+        # logging.info(" [+] Message Published : %s", message)
+        print(" [+] Message Published : ", message)
     except Exception as e:
         print(f"An Error Occurred: {e}")
-        logging.error(" [-] Error in Publishing : %s", e)
+        # logging.error(" [-] Error in Publishing : %s", e)
     finally:
         if producer is not None:
             producer.close()

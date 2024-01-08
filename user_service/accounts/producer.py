@@ -41,7 +41,7 @@ def fanout_publish(method: str, body: Any, exchange_name: str = "accounts"):
         connection = pika.BlockingConnection(paramters)
         channel = connection.channel()
 
-        channel.exchange_declare(exchange=exchange_name, exchange_type="fanout")
+        channel.exchange_declare(exchange=exchange_name, exchange_type="fanout",durable=True)
 
         data: dict = {
             "type": method,
@@ -50,7 +50,7 @@ def fanout_publish(method: str, body: Any, exchange_name: str = "accounts"):
 
         properties = pika.BasicProperties(content_type=method, delivery_mode=2)
 
-        body = json.dumps(data).encode('utf-8')
+        body = json.dumps(data,indent=4).encode('utf-8')
 
         channel.basic_publish(exchange=exchange_name, routing_key="", body=body,
                               properties=properties)

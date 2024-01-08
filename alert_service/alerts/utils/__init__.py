@@ -1,3 +1,4 @@
+from __future__ import absolute_import, unicode_literals
 from .determine_severity import determine_severity
 from .alerts import get_alerts_within_location
 from .geoapify import Geoapify, GeoapifyResponse, RoutingResponse

@@ -25,17 +25,21 @@ connection = pika.BlockingConnection(parameters)
 
 channel = connection.channel()
 
-channel.queue_declare(queue='alert',durable=True)
+queue_name = "alert_queue"
+
+channel.queue_declare(queue=queue_name,durable=True)
 
 # Declare a fanout exchange for the user service
 
 fanout_exchange_name = "accounts"
 
-# channel.exchange_declare(exchange=fanout_exchange_name, exchange_type='fanout',durable=True)
+
+
+channel.exchange_declare(exchange=fanout_exchange_name, exchange_type='fanout',durable=True)
 
 # Bind queue to the fanout exchange
 
-channel.queue_bind(exchange=fanout_exchange_name, queue='alert')
+channel.queue_bind(exchange=fanout_exchange_name, queue=queue_name)
 
 def callback(ch,method,properties,body):
 
@@ -43,6 +47,9 @@ def callback(ch,method,properties,body):
     delivery_mode = properties.delivery_mode
 
     message = json.loads(body.decode("utf-8"))
+
+
+    print("Message : ",message)
 
     event_type:str = message.get("type")
     data:dict = message.get("data")
@@ -195,25 +202,13 @@ def callback(ch,method,properties,body):
 
     # print("Method : ",method)
     # print("Properties : ",properties)
-    # print("Body : ")
+    # print("Body : ",body)
 
     print(" [+] New Message Recieve From Alert Queue")
 
-def fanout_callback(ch,method,properties,body):
-
-    print(" [+] New Message Recieve From Fanout Exchange")
-
-    callback(ch,method,properties,body)
-
 # Setup consumer for `alert`` queue
 
-channel.basic_consume(queue='alert',on_message_callback=callback,auto_ack=True)
-
-# # Setup consumer for the fanout exchange
-
-# fanout_queue_name = "fanout_alert_queue"
-# channel.queue_declare(queue=fanout_queue_name,durable=True)
-# channel.basic_consume(queue=fanout_queue_name,on_message_callback=fanout_callback,auto_ack=True)
+channel.basic_consume(queue=queue_name,on_message_callback=callback,auto_ack=False)
 
 
 print("[*] Waiting for messages. To exit press CTRL+C")

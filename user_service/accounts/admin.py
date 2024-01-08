@@ -76,7 +76,7 @@ class CitizenAdmin(BaseUserAdmin):
         (None, {"fields": ("email", "password",)}),
         (
             "Personal info",
-            {"fields": ("username", "phone_number", "first_name", "last_name", "date_of_birth", "profile_image")},
+            {"fields": ("username", "phone_number", "first_name", "last_name","gender", "date_of_birth", "profile_image")},
         ),
         (
             "Permissions",
@@ -101,6 +101,7 @@ class CitizenAdmin(BaseUserAdmin):
                 "fields": (
                     "username",
                     "email",
+                    "gender",
                     "phone_number",
                     "date_of_birth",
                     "profile_image",
@@ -123,8 +124,8 @@ class EmergencyResponderAdmin(BaseUserAdmin):
         (None, {"fields": ("email", "password",)}),
         (
             "Personal info",
-            {"fields": ("username", "phone_number", "first_name", "last_name", "date_of_birth", "profile_image",
-                        "emergency_contact_number")},
+            {"fields": ("username", "phone_number", "first_name", "last_name","gender", "date_of_birth", "profile_image",
+                        )},
         ),
         (
             "Permissions",
@@ -150,10 +151,9 @@ class EmergencyResponderAdmin(BaseUserAdmin):
                     "username",
                     "email",
                     "phone_number",
+                    "gender",
                     "date_of_birth",
                     "profile_image",
-                    "emergency_contact_number",
-                    "emergency_contact_person",
                     "password1",
                     "password2",
                 ),

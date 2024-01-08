@@ -7,11 +7,10 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "emergency_responder_service.settings")
 django.setup()
 
-from core.models import EmergencyResponseTeam,Alert,EmergencyAction,Messages,Resource,EmergencyResponder,Location,Profile
+from core.models import Alert,EmergencyResponder,Location,Profile
 
 from core import events
-from core.utils import Feature,Properties,Geometry
-from django.contrib.gis.geos import Point
+from core.utils import Feature
 
 from django.conf import settings
 
@@ -27,27 +26,21 @@ channel.queue_declare(queue=queue_name,durable=True)
 
 # Declare a fanout exchange
 
-fanout_exchanges = ["accounts","alerts"]
+topic_exchanges = ["accounts","alerts"]
 
-for exchange in fanout_exchanges:
+routing_keys = ["accounts.*","alerts.*"]
 
-    channel.exchange_declare(exchange=exchange,exchange_type="fanout",durable=True)
+for exchange in topic_exchanges:
+
+    channel.exchange_declare(exchange=exchange,exchange_type="topic",durable=True)
 
 # Bind queue to the fanout exchange
 
-for exchange in fanout_exchanges:
-    channel.queue_bind(exchange=exchange, queue=queue_name)
+for exchange,routing_key in list(zip(topic_exchanges,routing_keys)):
+    print(" [+] Binding queue to exchange : ",exchange, " with routing key : ",routing_key)
+    channel.queue_bind(exchange=exchange, queue=queue_name,routing_key=routing_key)
 
-def callback(ch,method,properties,body):
-
-    content_type = properties.content_type
-
-    delivery_mode = properties.delivery_mode
-
-    message = json.loads(body.decode("utf-8"))
-
-    event_type:str = message.get("type")
-    data:dict = message.get("data")
+def handle_event(event_type:str,data:dict):
 
     if event_type == events.EMERGENCY_RESPONDER_CREATED:
 
@@ -136,12 +129,9 @@ def callback(ch,method,properties,body):
 
         if _location:
 
-
-    
             location =  extract(_location)
 
             [lng,lat]= location.geometry.coordinates
-
 
             properties = location.properties
 
@@ -157,9 +147,22 @@ def callback(ch,method,properties,body):
         location:dict = data.pop("location",None)
         created_by:dict = data.pop("created_by",None)
 
+def callback(ch,method,properties,body):
 
+    content_type = properties.content_type
 
+    delivery_mode = properties.delivery_mode
 
+    message = json.loads(body.decode("utf-8"))
+
+    event_type:str = message.get("type")
+    data:dict = message.get("data")
+
+    print("Event : ",event_type," Data : ",data)
+
+    # handle_event(event_type,data)
+
+        
 # Setup consumer for emergency responder queue
     
 channel.basic_consume(queue=queue_name, on_message_callback=callback, auto_ack=False)

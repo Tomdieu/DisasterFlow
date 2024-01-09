@@ -13,9 +13,11 @@ from celery import shared_task
 
 @shared_task
 def publish_message(event_type, data, exchange_name="accounts"):
-    publish(events.USER_CREATED, data)
-    fanout_publish(events.USER_CREATED, data, exchange_name="accounts")
-
+    try:
+        publish(events.USER_CREATED, data)
+        fanout_publish(events.USER_CREATED, data, exchange_name="accounts")
+    except Exception as e:
+        print("An Execption Occured: ", e)
 
 @receiver(post_save, sender=User, dispatch_uid='create-token-profile-location')
 def create_token_and_notify_other_services(sender, instance, created, **kwargs):

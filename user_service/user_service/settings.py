@@ -196,5 +196,5 @@ CELERY_TIMEZONE = 'UTC'
 
 # CELERY RABBMITMQ CONFIGURATIONS
 
-CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'  # Replace with your RabbitMQ connection details
+CELERY_BROKER_URL = 'amqp://guest:guest@172.17.0.1:5672//'  # Replace with your RabbitMQ connection details
 CELERY_RESULT_BACKEND = 'rpc://'  # Recommended for real-world production use

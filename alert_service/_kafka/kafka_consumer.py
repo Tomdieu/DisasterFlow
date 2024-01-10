@@ -11,6 +11,9 @@ from django.contrib.gis.geos import Point
 from alerts.models import User, Profile, Location
 from alerts.utils.event_store import create_event_store
 from alerts import events
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 
 def process_message(event_type: str, data: dict):
@@ -152,6 +155,7 @@ def consume(topics: list[str]):
     consumer.subscribe(topics)
 
     print("[+] Starting Kafka Consumer")
+    logging.info(" [*] Waiting for messages. To exit press CTRL+C")
 
     try:
         while True:
@@ -175,9 +179,11 @@ def consume(topics: list[str]):
         
                     # consumer.commit()   
     except KeyboardInterrupt:
+        logging.info("[-] Stopping Consumer")
         print("\n[!] Keyboard interrupt received. Closing Kafka consumer.")
 
     finally:
+        logging.info("[-] Closing Consumer")
         consumer.close()
 
 if __name__ == "__main__":

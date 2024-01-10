@@ -202,11 +202,6 @@ def callback(ch,method,properties,body):
 
     # handle_event(event_type=event_type,data=data)
     
-
-    # print("Method : ",method)
-    # print("Properties : ",properties)
-    # print("Body : ",body)
-
     print(" [+] New Message Recieve From Alert Queue")
 
 # Setup consumer for `alert`` queue

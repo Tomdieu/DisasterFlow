@@ -149,7 +149,7 @@ def process_message(event_type: str, data: dict):
 def consume(topics: list[str]):
     
     consumer = KafkaConsumer(
-        bootstrap_servers=["localhost:9092"],
+        bootstrap_servers="localhost:9092",
         auto_offset_reset="earliest",
         enable_auto_commit=False,
         group_id="alert_group",

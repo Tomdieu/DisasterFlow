@@ -5,13 +5,16 @@ from json import loads
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "alert_service.settings")
 django.setup()
 
-
 from django.conf import settings
 from django.contrib.gis.geos import Point
 from alerts.models import User, Profile, Location
 from alerts.utils.event_store import create_event_store
 from alerts import events
 import logging
+
+from _kafka import  create_topic
+
+from django.conf import settings
 
 logging.basicConfig(level=logging.INFO)
 
@@ -143,9 +146,13 @@ def process_message(event_type: str, data: dict):
         else:
             print(" [+] User Does Not Exist")
 
+
 def consume(topics: list[str]):
+    for topic in topics:
+        create_topic(topic)
+
     consumer = KafkaConsumer(
-        bootstrap_servers=["localhost:9092"],
+        bootstrap_servers=[settings.BOOTSRAP_SERVERS],
         auto_offset_reset="earliest",
         enable_auto_commit=False,
         group_id="alert_group",
@@ -154,7 +161,7 @@ def consume(topics: list[str]):
 
     consumer.subscribe(topics)
 
-    print("[+] Starting Kafka Consumer")
+    print("[+] Waiting for messages. To exit press CTRL+C")
     logging.info(" [*] Waiting for messages. To exit press CTRL+C")
 
     try:
@@ -176,7 +183,7 @@ def consume(topics: list[str]):
                     # process_message(event_type=event_type, data=data)
 
                     print("Message : ", message_value)
-        
+
                     # consumer.commit()   
     except KeyboardInterrupt:
         logging.info("[-] Stopping Consumer")
@@ -186,6 +193,6 @@ def consume(topics: list[str]):
         logging.info("[-] Closing Consumer")
         consumer.close()
 
+
 if __name__ == "__main__":
-    
     consume(["users"])

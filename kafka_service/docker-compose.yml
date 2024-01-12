@@ -27,9 +27,14 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - kafka-data:/var/run/docker.sock
     networks:
       - bridge
 
 networks:
   bridge:
     driver: bridge
+
+volumes:
+  kafka-data:
+    driver: local

@@ -245,6 +245,25 @@ class Alert(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.type}"
+    
+class EmergencyNotification(models.Model):
+
+    STATUS = [
+        ('pending','pending'),
+        ('accept','accept'),
+        ('cancel','cancel')
+    ]
+
+    alert = models.ForeignKey(Alert,on_delete=models.CASCADE)
+    team = models.ForeignKey(EmergencyResponseTeam,on_delete=models.CASCADE,related_name="notifications")
+    status = models.CharField(max_length=20,choices=STATUS)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateField(auto_now=True)
+
+    def __str__(self):
+
+        return f"Alert Notification {self.alert} for {self.team}"
+
 
 
 class EmergencyAction(models.Model):

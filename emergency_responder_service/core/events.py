@@ -16,6 +16,10 @@ CITIZEN_DELETED = "citizen_deleted"
 LOCATION_CREATED = "location_created"
 LOCATION_UPDATED = "location_updated"
 
+USER_LOCATION_CREATED = "user_location_created"
+USER_LOCATION_UPDATED = "user_location_updated"
+
+
 
 ALERT_CREATED = "alert_created"
 ALERT_UPDATED = "alert_updated"

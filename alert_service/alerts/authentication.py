@@ -6,27 +6,27 @@ from django.http import HttpRequest
 
 from .models import User
 
+
 class TokenAuthentication(BaseAuthentication):
 
-    def authenticate(self, request:HttpRequest):
+    def authenticate(self, request: HttpRequest):
 
         token = request.headers.get('Authorization')
 
         if not token:
-
             return None
-        
-        user_info_url = settings.ACCOUNT_SERVICE+"/api/accounts/user/user-info"
-        headers = {'Authorization':token}
+
+        user_info_url = settings.ACCOUNT_SERVICE + "/api/accounts/user/user-info"
+        headers = {'Authorization': token}
 
         try:
 
-            response = requests.get(user_info_url,headers=headers)
+            response = requests.get(user_info_url, headers=headers)
             response.raise_for_status()
             user_data = response.json()
         except requests.RequestException as e:
             raise AuthenticationFailed('Failed to authenticate. Error: {}'.format(str(e)))
-        
+
         # Get the user base on the user_id
         user = User.objects.get(id=user_data['id'])
 

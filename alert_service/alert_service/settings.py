@@ -190,3 +190,16 @@ RABBITMQ_PORT = env('RABBITMQ_PORT',default=5672)
 
 
 BOOTSRAP_SERVERS = "localhost:9092"
+
+# CELERY CONFIG
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
+
+
+# CELERY RABBMITMQ CONFIGURATIONS
+
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost:5672//'  # Replace with your RabbitMQ connection details
+CELERY_RESULT_BACKEND = 'rpc://'  # Recommended for real-world production use

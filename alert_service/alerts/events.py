@@ -13,8 +13,8 @@ CITIZEN_CREATED = "citizen_created"
 CITIZEN_UPDATED = "citizen_updated"
 CITIZEN_DELETED = "citizen_deleted"
 
-USER_LOCATION_CREATED = "location_created"
-USER_LOCATION_UPDATED = "location_updated"
+USER_LOCATION_CREATED = "user_location_created"
+USER_LOCATION_UPDATED = "user_location_updated"
 
 REPORT_CREATED = "report_created"
 REPORT_UPDATED = "report_updated"
@@ -45,3 +45,5 @@ EMERGENCY_RESPONDER_UNVERIFIED = "emergency_responder_unverified"
 
 EMERGENCY_RESPONSE_TEAM_VERIFIED = "emergency_response_team_verified"
 EMERGENCY_RESPONSE_TEAM_UNVERIFIED = "emergency_response_team_unverified"
+
+LOCATION_CREATED = "location_updated"

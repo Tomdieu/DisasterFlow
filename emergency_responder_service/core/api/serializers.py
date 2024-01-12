@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from core.models import EmergencyResponder,EmergencyResponseTeam,Location,Profile,Alert,EmergencyAction,Messages,Resource
+from core.models import EmergencyResponder,EmergencyResponseTeam,Location,Profile,Alert,EmergencyAction,Messages,Resource,EmergencyNotification
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 # Serializer for Profile model
@@ -54,10 +54,10 @@ class AddOrRemoveMemberSerializer(serializers.Serializer):
         return EmergencyResponder.objects.get(id=value)
 
 # Serializer for Alert model
-class AlertSerializer(GeoFeatureModelSerializer):
+class AlertSerializer(serializers.ModelSerializer):
+    location = Location()
     class Meta:
         model = Alert
-        geo_field = 'point'
         fields = '__all__'
 
 # Serializer for EmergencyAction model
@@ -104,3 +104,11 @@ class RemoveResourceSerializer(serializers.Serializer):
         if not Resource.objects.filter(id=value).exists():
             raise serializers.ValidationError("Resource with this id does not exist")
         return Resource.objects.get(id=value)
+    
+
+class EmergencyNotificationSerializer(serializers.ModelSerializer):
+
+    alert = AlertSerializer()
+    class Meta:
+
+        fields = '__all__'

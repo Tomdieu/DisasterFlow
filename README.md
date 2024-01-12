@@ -16,9 +16,9 @@ DisasterFlow is a robust and adaptable system designed to streamline disaster pr
 
 - **Emergency Contacts**: Access a comprehensive list of emergency contact numbers, including local authorities, hospitals, fire departments, and police stations.
 
-- **Safety Tips**: Get access to valuable safety tips and guidelines on how to handle different types of emergencies, ensuring you know what to do in critical situations.
+<!-- - **Safety Tips**: Get access to valuable safety tips and guidelines on how to handle different types of emergencies, ensuring you know what to do in critical situations. -->
 
-- **Checklists and Guides**: Utilize helpful checklists and step-by-step guides for disaster preparedness, evacuation planning, emergency supplies, and more.
+<!-- - **Checklists and Guides**: Utilize helpful checklists and step-by-step guides for disaster preparedness, evacuation planning, emergency supplies, and more. -->
 
 - **Disaster Tracking**: Track the progress and status of ongoing disasters in your area, including updates on containment efforts, evacuation orders, and relief operations.
 

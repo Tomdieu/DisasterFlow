@@ -30,7 +30,7 @@ class LoginSerializer(serializers.Serializer):
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['location', 'skills', 'interest', 'is_online', 'last_activity']
+        fields = ['user','location', 'skills', 'interest', 'is_online', 'last_activity']
 
 
 class CitizenSerializer(serializers.ModelSerializer):
@@ -55,7 +55,7 @@ class CitizenListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Citizen
-        fields = ['username', 'email', 'type',"gender", 'date_of_birth', 'profile_image','phone_number','profile','location']
+        fields = ['id','username', 'email', 'type',"gender", 'date_of_birth', 'profile_image','phone_number','profile','location']
 
 
 class EmergencyResponderCreateSerializer(serializers.ModelSerializer):
@@ -77,7 +77,7 @@ class EmergencyResponderCreateSerializer(serializers.ModelSerializer):
 class EmergencyResponderSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmergencyResponder
-        fields = ['username', 'email', 'type',"gender","specialization", 'date_of_birth', 'profile_image',"gender", 'phone_number']
+        fields = ['id','username', 'email', 'type',"gender","specialization", 'date_of_birth', 'profile_image',"gender", 'phone_number']
 
         extra_kwargs = {
             "password": {
@@ -96,7 +96,7 @@ class EmergencyResponderListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EmergencyResponder
-        fields = ['username', 'email', 'type',"gender","specialization", 'date_of_birth', 'profile_image',"gender", 'phone_number','profile','location']
+        fields = ['id','username', 'email', 'type',"gender","specialization", 'date_of_birth', 'profile_image',"gender", 'phone_number','profile','location']
 
 
 class UserSerializer(serializers.ModelSerializer):

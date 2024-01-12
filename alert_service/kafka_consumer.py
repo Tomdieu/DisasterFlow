@@ -5,7 +5,6 @@ import logging
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "alert_service.settings")
 django.setup()
 
-
 from django.conf import settings
 from django.contrib.gis.geos import Point
 from alerts.models import User, Profile, Location
@@ -15,8 +14,8 @@ from alerts import events
 from kafka import KafkaConsumer
 from time import sleep
 
-
 logging.basicConfig(level=logging.INFO)
+
 
 def process_message(event_type: str, data: dict):
     if event_type == events.CITIZEN_CREATED:
@@ -147,7 +146,6 @@ def process_message(event_type: str, data: dict):
 
 
 def consume(topics: list[str]):
-    
     consumer = KafkaConsumer(
         bootstrap_servers="localhost:9092",
         auto_offset_reset="earliest",
@@ -160,13 +158,13 @@ def consume(topics: list[str]):
 
     try:
         while True:
-            
+
             logging.info(" [*] Waiting for messages. To exit press CTRL+C")
-            
+
             message = consumer.poll(1000)
 
             if message:
-                
+
                 if message is None:
                     continue
 
@@ -176,22 +174,21 @@ def consume(topics: list[str]):
                     # print("Topic : ",topic, " Messages : ",messages)
 
                     for msg in messages:
-                        
                         message_data = msg.value
 
-                        topic:str = msg.topic
+                        topic: str = msg.topic
 
-                        key:str = msg.key
+                        key: str = msg.key
 
-                        event_type:str = message_data.get("type",None)
-                        data:dict = message_data.get("data",None)
+                        event_type: str = message_data.get("type", None)
+                        data: dict = message_data.get("data", None)
 
-                        print("Even Type : ",event_type," Data : ",data)
+                        print("Even Type : ", event_type, " Data : ", data)
 
-                        # process_message(event_type=event_type,data=data)
+                        process_message(event_type=event_type,data=data)
 
                         print(" [+] Message Consumed : ", msg.value)
-            
+
 
     except KeyboardInterrupt:
         logging.info("[-] Stopping Consumer")
@@ -199,6 +196,7 @@ def consume(topics: list[str]):
     finally:
         logging.info("[-] Closing Consumer")
         consumer.close()
+
 
 if __name__ == "__main__":
     consume(["users"])

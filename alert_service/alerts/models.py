@@ -4,6 +4,7 @@ from django.contrib.gis.db import models
 from .disaster_types import TYPES
 import uuid
 
+
 # Create your models here.
 
 
@@ -12,7 +13,7 @@ class Location(models.Model):
     address = models.CharField(max_length=255, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
-    state = models.CharField(max_length=100,null=True,blank=True)
+    state = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return f"{self.address} - {self.point}"
@@ -25,22 +26,21 @@ class User(models.Model):
     id = models.BigIntegerField(primary_key=True)
     username = models.CharField(max_length=255)
     email = models.CharField(max_length=255)
-    phone_number = models.CharField(max_length=255,null=True, blank=True)
+    phone_number = models.CharField(max_length=255, null=True, blank=True)
     type = models.CharField(max_length=255)
     gender = models.CharField(max_length=255)
-    profile_image = models.CharField(max_length=255,null=True, blank=True)
+    profile_image = models.CharField(max_length=255, null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
-    first_name = models.CharField(max_length=255,null=True, blank=True)
-    last_name = models.CharField(max_length=255,null=True, blank=True)
-
+    first_name = models.CharField(max_length=255, null=True, blank=True)
+    last_name = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return f"{self.username} - {self.type}"
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE,primary_key=True)
-    location = models.ForeignKey(Location, on_delete=models.CASCADE,null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True,related_name='profile')
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True, blank=True)
     skills = models.CharField(max_length=255)
     interests = models.CharField(max_length=255)
 
@@ -49,7 +49,6 @@ class Profile(models.Model):
 
     def __str__(self) -> str:
         return f"{self.user.username} - {self.skills}"
-
 
 
 class UserReport(models.Model):
@@ -66,21 +65,18 @@ class UserReport(models.Model):
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=255)
-    description = models.TextField(blank=True,null=True)
     type = models.CharField(max_length=255, choices=TYPES)
     image = models.ImageField(upload_to='reports_image/', null=True, blank=True)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     timestamp = models.DateTimeField(auto_now_add=True)
-    impact = models.CharField(max_length=255, choices=IMPACT,default="low")
-    urgency = models.CharField(max_length=255, choices=URGENCY,default="low")
+    impact = models.CharField(max_length=255, choices=IMPACT, default="low")
+    urgency = models.CharField(max_length=255, choices=URGENCY, default="low")
 
     def __str__(self) -> str:
-        return f"{self.title} - {self.user.username}"
-    
+        return f"Report : {self.user} - {self.type}"
+
 
 class Alert(models.Model):
-    
     SEVERITY = [
         ("low", "Low"),
         ("moderate", "Moderate"),
@@ -93,9 +89,6 @@ class Alert(models.Model):
         ("emergency_responders", "Emergency Responders"),
     ]
 
-    title = models.CharField(max_length=255)
-
-    description = models.CharField(max_length=255)
     type = models.CharField(max_length=255, choices=TYPES)
     severity = models.CharField(max_length=100, choices=SEVERITY)
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
@@ -105,7 +98,8 @@ class Alert(models.Model):
     audience = models.CharField(max_length=20, choices=AUDIENCE_CHOICES)
 
     def __str__(self):
-        return f"{self.title} - {self.type}"
+        return f"Alert : {self.type} - {self.severity} at [{self.location.point}]"
+
 
 class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

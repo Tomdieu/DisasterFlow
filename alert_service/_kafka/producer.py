@@ -1,17 +1,18 @@
-from kafka import KafkaProducer
-from kafka.admin import KafkaAdminClient,NewTopic
-from json import dumps
 import logging
+from json import dumps
 
 from django.conf import settings
+from kafka import KafkaProducer
+from kafka.admin import KafkaAdminClient, NewTopic
 
 logging.basicConfig(level=logging.INFO)
+
 
 def create_topic(topic_name: str):
     try:
         admin_client = KafkaAdminClient(
             bootstrap_servers=settings.BOOTSRAP_SERVERS,
-            client_id='user'
+            client_id='alert'
         )
 
         topics = admin_client.list_topics()
@@ -31,23 +32,23 @@ def create_topic(topic_name: str):
         logging.error(" [-] Error in Creating Topic : %s", e)
 
 
-def publish(method:str,value: dict):
+def publish(method: str, value: dict):
     producer = None
     try:
         producer = KafkaProducer(
-        bootstrap_servers=[settings.BOOTSRAP_SERVERS],
-        value_serializer=lambda x: dumps(x).encode("utf-8"),
+            bootstrap_servers=[settings.BOOTSRAP_SERVERS],
+            value_serializer=lambda x: dumps(x).encode("utf-8"),
         )
 
-        data:dict = {
-            'type':method,
-            'data':value
+        data: dict = {
+            'type': method,
+            'data': value
         }
 
         topic = "alerts"
         create_topic(topic)
 
-        producer.send(topic,key=method,value=data)
+        producer.send(topic, key=method, value=data)
 
         producer.flush()
     except Exception as e:

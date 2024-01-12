@@ -79,7 +79,7 @@ def handle_event(event_type:str,data:dict):
 
             profile.save()
     
-    if event_type == events.LOCATION_CREATED:
+    if event_type == events.USER_LOCATION_CREATED:
         if(EmergencyResponder.objects.filter(id=data.get("user")).exists()):
             user = EmergencyResponder.objects.get(id=data.get("user"))
 
@@ -95,7 +95,7 @@ def handle_event(event_type:str,data:dict):
             print(" [+] Location Created For Emergency Responder : ",location)
         print(" [+] The location created is not for an emergency responder")
 
-    if event_type == events.LOCATION_UPDATED:
+    if event_type == events.USER_LOCATION_UPDATED:
 
         if(EmergencyResponder.objects.filter(id=data.get("user")).exists()):
             user = EmergencyResponder.objects.get(id=data.get("user"))
@@ -158,9 +158,15 @@ def callback(ch,method,properties,body):
     event_type:str = message.get("type")
     data:dict = message.get("data")
 
-    print("Event : ",event_type," Data : ",data)
 
-    # handle_event(event_type,data)
+
+    # ch.basic_ack(delivery_tag=method.delivery_tag)
+
+    print("Event : ",event_type)
+
+    print("Data : ",json.dumps(data,indent=4))
+
+    handle_event(event_type,data)
 
         
 # Setup consumer for emergency responder queue

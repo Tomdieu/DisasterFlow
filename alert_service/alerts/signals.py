@@ -29,39 +29,38 @@ def process_location(sender, instance: Location, created, **kwargs):
             instance.city = response.results[0].city
             instance.save()
 
-        async_to_sync(async_fill_location_detail)(instance)
+        try:
 
-        # create_event_store(events.LOCATION_CREATED,LocationSerializer(instance).data)
+            async_to_sync(async_fill_location_detail)(instance)
 
+            # create_event_store(events.LOCATION_CREATED,LocationSerializer(instance).data)
+        except Exception as e:
+            print("An Error Occur : {}".format(e))
 
 @receiver(post_save, sender=UserReport, dispatch_uid="process_report")
 def process_report(sender, instance, created, **kwargs):
     if created:
 
-        async def async_task(instance: UserReport):
+        async def async_task(user_report: UserReport):
             """
             Async Task To Create Alert From User Report
             - Here we are going to create an alert from the user report
             - We are going to use the same location as the user report
-            - We are going to use the same title as the user report
-            - We are going to use the same description as the user report
             - We are going to use the same type as the user report
             - We are going to use the same severity as the user report
             - From the impact and the urgency we will calculate the severity
             """
 
-            impact = instance.impact
-            urgency = instance.urgency
+            impact = user_report.impact
+            urgency = user_report.urgency
 
             severity = determine_severity(impact, urgency)
 
             Alert.objects.create(
-                title=instance.title,
-                description=instance.description,
-                type=instance.type,
+                type=user_report.type,
                 severity=severity,
-                location=instance.location,
-                created_by=instance.user,
+                location=user_report.location,
+                created_by=user_report.user,
                 audience="public",
             )
 

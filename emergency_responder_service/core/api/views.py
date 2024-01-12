@@ -18,7 +18,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from core.authentication import TokenAuthentication
 
-from core.models import EmergencyResponder, EmergencyResponseTeam,Resource,Alert,EmergencyAction,Messages
+from core.models import EmergencyResponder, EmergencyResponseTeam,Resource,Alert,EmergencyAction,Messages,EmergencyNotification
 from .serializers import (
     EmergencyResponderSerializer,
     CreateEmergencyResponseTeamSerializer,
@@ -29,7 +29,8 @@ from .serializers import (
     MessagesSerializer,
     ResourceSerializer,
     ResourceCreateSerializer,
-    RemoveResourceSerializer
+    RemoveResourceSerializer,
+    EmergencyNotificationSerializer
 )
 
 
@@ -75,6 +76,8 @@ class EmergencyResponseTeamViewSet(
             return MessagesSerializer
         elif self.action == "send_message":
             return MessagesSerializer
+        elif self.action == "notifications":
+            return EmergencyNotificationSerializer
     
     def destroy(self, request, *args, **kwargs):
         team = self.get_object()
@@ -219,6 +222,16 @@ class EmergencyResponseTeamViewSet(
         serializer.save()
 
         return Response({"detail": "Message sent"},status=status.HTTP_200_OK)
+    
+    @action(detail=True,methods=['get'])
+    def notifications(self,request,pk=None):
+
+        team = self.get_object()
+        notifications = EmergencyNotification.objects.filter(team=team)
+
+        serializer = EmergencyNotificationSerializer(notifications,many=True,context={'request':request})
+
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
 class AlertViewSet(
     ListModelMixin,

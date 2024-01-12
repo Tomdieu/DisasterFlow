@@ -251,4 +251,13 @@ class EmergencyActionViewSet(
 ):
     queryset = EmergencyAction.objects.all()
     serializer_class = EmergencyActionSerializer
+
+
+    @action(detail=True,methods=['get'])
+    def path(self,request,pk=None):
+        emergency_action = self.get_object()
+
+        alert = emergency_action.alert
+        
+        return Response(path,status=status.HTTP_200_OK)
     

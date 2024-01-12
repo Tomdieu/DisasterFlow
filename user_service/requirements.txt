@@ -7,10 +7,13 @@ click-didyoumean==0.3.0
 click-plugins==1.1.1
 click-repl==0.3.0
 confluent-kafka==2.3.0
-Django==5.0
+cron_descriptor==1.4.0
+Django==4.2.9
+django-celery-beat==2.5.0
 django-cors-headers==4.3.1
 django-environ==0.11.2
 django-filter==23.5
+django-timezone-field==6.1.0
 djangorestframework==3.14.0
 drf-yasg==1.21.7
 inflection==0.5.1
@@ -22,6 +25,7 @@ pika==1.3.2
 pika-stubs==0.1.3
 Pillow==10.1.0
 prompt-toolkit==3.0.43
+python-crontab==3.0.0
 python-dateutil==2.8.2
 pytz==2023.3.post1
 PyYAML==6.0.1

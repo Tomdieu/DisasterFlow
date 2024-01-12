@@ -45,3 +45,9 @@ We value your feedback and are committed to continuously improving DisasterFlow.
 We appreciate your support and hope that DisasterFlow becomes an essential tool in your disaster management preparedness efforts.
 
 Stay safe and be prepared! -->
+
+
+## Description
+
+DisasterFlow is a microservice-oriented disaster management system that leverages a microservice architecture to provide enhanced scalability, flexibility, and fault tolerance. It is designed to streamline disaster preparedness, response, and recovery efforts by providing users with access to real-time alerts, emergency contacts, disaster tracking, and community support.
+

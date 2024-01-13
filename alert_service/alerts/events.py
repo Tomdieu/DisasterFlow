@@ -47,3 +47,5 @@ EMERGENCY_RESPONSE_TEAM_VERIFIED = "emergency_response_team_verified"
 EMERGENCY_RESPONSE_TEAM_UNVERIFIED = "emergency_response_team_unverified"
 
 LOCATION_CREATED = "location_updated"
+
+ALERT_NOTIFICATION_SENT = "alert_notification_sent"

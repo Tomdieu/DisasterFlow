@@ -41,8 +41,8 @@ class User(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True,related_name='profile')
     location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True, blank=True)
-    skills = models.CharField(max_length=255)
-    interests = models.CharField(max_length=255)
+    skills = models.CharField(max_length=255,blank=True,null=True)
+    interest = models.CharField(max_length=255,blank=True,null=True)
 
     is_online = models.BooleanField(default=False)
     last_activity = models.DateTimeField(default=timezone.now)

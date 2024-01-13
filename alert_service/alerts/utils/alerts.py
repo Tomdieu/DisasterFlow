@@ -32,10 +32,16 @@ def get_alerts_within_location(place: str, radius: float = 1.0,user_id:int=None)
     alerts_within_radius : List[Alert] = []
 
     if user_id:
+        # alerts_within_radius = Alert.objects.filter(
+        #     created_by_id=user_id,
+        #     location__point__dwithin=(search_point, radius__in_km)
+        # )
         alerts_within_radius = Alert.objects.filter(created_by_id=user_id,location__point__distance_lte=(search_point, Distance(km=radius__in_km)))
     else:
+        # alerts_within_radius = Alert.objects.filter(
+        #     location__point__dwithin=(search_point, radius__in_km)
+        # )
         alerts_within_radius = Alert.objects.filter(location__point__distance_lte=(search_point, Distance(km=radius__in_km)))
-
     # alerts = Alert.objects.filter(location__lat__gte=lat-0.05,location__lat__lte=lat+0.05,location__lng__gte=lng-0.05,location__lng__lte=lng+0.05)
 
     return alerts_within_radius

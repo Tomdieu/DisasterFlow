@@ -2,7 +2,7 @@ from django.contrib import admin
 from leaflet.admin import LeafletGeoAdmin
 # Register your models here.
 
-from .models import Alert, Location, User, UserReport
+from .models import Alert, Location, User, UserReport,Profile,Event
 
 
 class ReadOnlyModelAdmin(admin.ModelAdmin):
@@ -39,3 +39,12 @@ class UserReportAdmin(admin.ModelAdmin):
 class UserAdmin(ReadOnlyModelAdmin):
     list_display = ['username', 'email', 'phone_number', 'type', 'gender']
     list_filter = ['username', 'email', 'type', 'gender']
+
+@admin.register(Profile)
+class ProfileAdmin(ReadOnlyModelAdmin):
+
+    list_display = ['user','location','skills']
+
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    list_display = ['id','event_type','data','timestamp']

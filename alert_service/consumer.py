@@ -16,9 +16,12 @@ from alerts.utils.event_store import create_event_store
 
 from alerts import events
 
+# Set the timeout to 3 hours (in seconds)
+timeout_seconds = 3 * 60 * 60
+
 credentials = pika.PlainCredentials(settings.RABBITMQ_USERNAME, settings.RABBITMQ_PASSWORD)
 parameters = pika.ConnectionParameters(settings.RABBITMQ_HOST, settings.RABBITMQ_PORT, settings.RABBITMQ_VHOST,
-                                       credentials)
+                                       credentials,socket_timeout=timeout_seconds)
 # credentials = pika.PlainCredentials("guest", "guest")
 # parameters = pika.ConnectionParameters("localhost", 5672, "/", credentials)
 connection = pika.BlockingConnection(parameters)
@@ -106,7 +109,7 @@ def handle_event(event_type: str, data: dict, method: Any, channel: Any):
                 print(" [+] User Updated : ", user)
 
             else:
-                channel.basic_ack(delivery_tag=method.delivery_tag)
+                # channel.basic_ack(delivery_tag=method.delivery_tag)
                 print(" [+] User Does Not Exist")
 
     elif event_type == events.CITIZEN_DELETED or event_type == events.USER_DELETED:
@@ -123,18 +126,24 @@ def handle_event(event_type: str, data: dict, method: Any, channel: Any):
             channel.basic_ack(delivery_tag=method.delivery_tag)
 
         else:
-            channel.basic_ack(delivery_tag=method.delivery_tag)
+            # channel.basic_ack(delivery_tag=method.delivery_tag)
             print(" [+] User Does Not Exist")
 
     elif event_type == events.PROFILE_CREATED:
 
-        if User.objects.filter(id=data.get("id")).exists():
+        if User.objects.filter(id=data.get("user")).exists():
+
             user = User.objects.get(id=data.get("user"))
-            profile = Profile.objects.create(user=user, **data)
 
             location = data.pop("location", None)
+            data.pop('user',None)
 
-            profile = Profile.objects.create(user=user, **data)
+            print("User : ", user)
+            print("Data : ", data)
+
+            profile = Profile.objects.create(user=user,**data)
+
+            # profile = Profile.objects.create(user_id=user.id, **data)
 
             create_event_store(event_type=event_type, data=data)
             channel.basic_ack(delivery_tag=method.delivery_tag)
@@ -143,12 +152,13 @@ def handle_event(event_type: str, data: dict, method: Any, channel: Any):
 
     elif event_type == events.PROFILE_UPDATED:
 
-        if User.objects.filter(id=data.get("id")).exists():
+        if User.objects.filter(id=data.get("user")).exists():
 
             user = User.objects.get(id=data.get("user"))
             profile = Profile.objects.get(user=user)
 
             location = data.pop("location", None)
+            data.pop('user',None)
 
             for key, value in data.items():
                 setattr(profile, key, value)
@@ -161,12 +171,12 @@ def handle_event(event_type: str, data: dict, method: Any, channel: Any):
             channel.basic_ack(delivery_tag=method.delivery_tag)
 
         else:
-            channel.basic_ack(delivery_tag=method.delivery_tag)
+            # channel.basic_ack(delivery_tag=method.delivery_tag)
             print(" [+] User Does Not Exist")
 
     elif event_type == events.USER_LOCATION_CREATED:
 
-        if User.objects.filter(id=data.get("id")).exists():
+        if User.objects.filter(id=data.get("user")).exists():
 
             user = User.objects.get(id=data.get("user"))
 
@@ -191,12 +201,12 @@ def handle_event(event_type: str, data: dict, method: Any, channel: Any):
             print(" [+] Location Created : ", location)
 
         else:
-            channel.basic_ack(delivery_tag=method.delivery_tag)
+            # channel.basic_ack(delivery_tag=method.delivery_tag)
             print(" [+] User Does Not Exist")
 
     elif event_type == events.USER_LOCATION_UPDATED:
 
-        if User.objects.filter(id=data.get("id")).exists():
+        if User.objects.filter(id=data.get("user")).exists():
 
             user = User.objects.get(id=data.get("user"))
 
@@ -223,7 +233,7 @@ def handle_event(event_type: str, data: dict, method: Any, channel: Any):
             channel.basic_ack(delivery_tag=method.delivery_tag)
 
         else:
-            channel.basic_ack(delivery_tag=method.delivery_tag)
+            # channel.basic_ack(delivery_tag=method.delivery_tag)
             print(" [+] User Does Not Exist")
 
 

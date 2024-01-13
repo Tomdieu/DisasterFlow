@@ -26,15 +26,26 @@ SPECIALIZATION_CHOICES = [
 
 
 class EmergencyResponder(models.Model):
+    class Types(models.TextChoices):
+        CITIZEN = "Citizen", "Citizen"
+        EMERGENCY_RESPONDER = "EmergencyResponder", "Emergency Responder"
+        ADMIN = "administrator", "Administrator"
+        
+    GENDER_CHOICES = [
+        ("M", "Male"),
+        ("F", "Female"),
+        ("O", "Other")
+    ]
     id = models.BigIntegerField(primary_key=True)
     email = models.EmailField(_("email address"), unique=True)
-    gender = models.CharField(max_length=10)
+    gender = models.CharField(max_length=10,choices=GENDER_CHOICES)
     date_of_birth = models.DateField(null=True, blank=True)
-    profile_image = models.CharField(max_length=255)
+    profile_image = models.CharField(max_length=255,blank=True,null=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)
-    username = models.CharField(max_length=120)
+    username = models.CharField(max_length=120,blank=True,null=True)
     first_name = models.CharField(max_length=120, blank=True, null=True)
     last_name = models.CharField(max_length=120, blank=True, null=True)
+    type = models.CharField(max_length=255, choices=Types.choices, default=Types.CITIZEN)
     emergency_contact_number = models.CharField(max_length=15, blank=True, null=True)
     emergency_contact_person = models.CharField(max_length=255, blank=True, null=True)
     is_verified = models.BooleanField(default=False)
@@ -80,7 +91,15 @@ class Location(models.Model):
     address = models.CharField(max_length=255, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
-    state = models.CharField(max_length=100)
+    state = models.CharField(max_length=100,null=True,blank=True)
+    
+
+class AlertLocation(models.Model):
+    point = models.PointField(blank=True, null=True)
+    address = models.CharField(max_length=255, null=True, blank=True)
+    country = models.CharField(max_length=100, null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    state = models.CharField(max_length=100,null=True,blank=True)
 
 
 class EmergencyResponseTeam(models.Model):
@@ -233,18 +252,16 @@ class Alert(models.Model):
         ("emergency_responders", "Emergency Responders"),
     ]
 
-    title = models.CharField(max_length=255)
-
-    description = models.CharField(max_length=255)
+    image = models.TextField(blank=True,null=True)
     type = models.CharField(max_length=255, choices=TYPES)
     severity = models.CharField(max_length=100, choices=SEVERITY)
-    location = models.ForeignKey(Location, on_delete=models.CASCADE)
+    location = models.ForeignKey(AlertLocation, on_delete=models.CASCADE)
     timestamp = models.DateTimeField()
     created_by = models.IntegerField("User id",help_text="This is the id of the user who created the alert")
     audience = models.CharField(max_length=20, choices=AUDIENCE_CHOICES)
 
     def __str__(self):
-        return f"{self.title} - {self.type}"
+        return f"Alert : {self.type} severity : {self.severity}"
     
 class EmergencyNotification(models.Model):
 
@@ -256,7 +273,8 @@ class EmergencyNotification(models.Model):
 
     alert = models.ForeignKey(Alert,on_delete=models.CASCADE)
     team = models.ForeignKey(EmergencyResponseTeam,on_delete=models.CASCADE,related_name="notifications")
-    status = models.CharField(max_length=20,choices=STATUS)
+    message = models.TextField(null=True,blank=True)
+    status = models.CharField(max_length=20,choices=STATUS,default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
 

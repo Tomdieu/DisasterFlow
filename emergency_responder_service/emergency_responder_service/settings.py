@@ -175,3 +175,5 @@ RABBITMQ_PASSWORD = env('RABBITMQ_PASSWORD',default='guest')
 RABBITMQ_HOST = env('RABBITMQ_HOST',default='localhost')
 RABBITMQ_VHOST = env('RABBITMQ_VHOST',default='/')
 RABBITMQ_PORT = env('RABBITMQ_PORT',default=5672)
+
+GEOAPIFY_API_KEY = env('GEOAPIFY_API_KEY',default='')

@@ -30,7 +30,8 @@ from .serializers import (
     ResourceSerializer,
     ResourceCreateSerializer,
     RemoveResourceSerializer,
-    EmergencyNotificationSerializer
+    EmergencyNotificationSerializer,
+    LocationSerializer
 )
 
 
@@ -253,11 +254,111 @@ class EmergencyActionViewSet(
     serializer_class = EmergencyActionSerializer
 
 
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                name='origin',
+                in_=openapi.IN_QUERY,
+                type=openapi.TYPE_STRING,
+                description='Origin location in the format lat|lng or simply address name',
+                required=False,
+            ),
+            openapi.Parameter(
+                name='destination',
+                in_=openapi.IN_QUERY,
+                type=openapi.TYPE_STRING,
+                description='Destination location in the format lat|lng or simplce address name',
+                required=False,
+            ),
+        ],
+    )
     @action(detail=True,methods=['get'])
     def path(self,request,pk=None):
+        from core.utils import Geoapify,Feature
+        import re
+
+        lat_lng_pattern = re.compile(r'^[-+]?\d*\.\d+|[-+]?\d+$')
+        address_name_pattern = re.compile(r'^[a-zA-Z0-9\s]+$')
+
+
+        geoapify = Geoapify()
+
+        origin = request.query_params.get('origin',None)
+        destination = request.query_params.get('destination',None)
+
         emergency_action = self.get_object()
 
         alert = emergency_action.alert
+        team_location = emergency_action.team.location
+        
+
+        if origin and destination:
+
+            if lat_lng_pattern.match(origin) and lat_lng_pattern.match(destination):
+                origin = f'{origin[0]}|{origin[1]}'
+                destination = f'{destination[0]}|{destination[1]}'
+
+                path = geoapify.get_routes_between_locations(origin,destination)
+
+                return Response(path,status=status.HTTP_200_OK)
+            else:
+
+                origin = geoapify.forward_geocode(origin)
+                destination = geoapify.forward_geocode(destination)
+
+                origin = [origin.results[0].lat,origin.results[0].lon]
+                destination = [destination.results[0].lat,destination.results[0].lon]
+
+                origin = f'{origin[0]}|{origin[1]}'
+                destination = f'{destination[0]}|{destination[1]}'
+
+                path = geoapify.get_routes_between_locations(origin,destination)
+
+                return Response(path,status=status.HTTP_200_OK)
+        
+        if origin and not destination:
+
+            origin = geoapify.forward_geocode(origin)
+
+            origin = [origin.results[0].lat,origin.results[0].lon]
+            
+            alert_location = alert.location
+            alert_location_serializer = LocationSerializer(alert_location)
+            alert_location_data = Feature(**alert_location_data.data)
+            
+            destination = [alert_location_data.geometry.coordinates[1],alert_location_data.geometry.coordinates[0]]
+
+            origin = f'{origin[0]}|{origin[1]}'
+            destination = f'{destination[0]}|{destination[1]}'
+            
+
+            path = geoapify.get_routes_between_locations(origin,destination)
+
+            return Response(path,status=status.HTTP_200_OK)
+        
+        if destination and not origin:
+            
+            destination = geoapify.forward_geocode(destination)
+
+            destination = [destination.results[0].lat,destination.results[0].lon]
+            
+            alert_location = alert.location
+            alert_location_serializer = LocationSerializer(alert_location)
+            alert_location_data = Feature(**alert_location_data.data)
+            
+            origin = [alert_location_data.geometry.coordinates[1],alert_location_data.geometry.coordinates[0]]
+
+            origin = f'{origin[0]}|{origin[1]}'
+            destination = f'{destination[0]}|{destination[1]}'
+            
+
+            path = geoapify.get_routes_between_locations(origin,destination)
+
+            return Response(path,status=status.HTTP_200_OK)
+
+        
+
+
         
         return Response(path,status=status.HTTP_200_OK)
     

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from leaflet.admin import LeafletGeoAdmin
-from .models import EmergencyResponder,EmergencyResponseTeam,Location,Profile,Alert,EmergencyAction,Messages,Resource
+from .models import AlertLocation,EmergencyNotification,EmergencyResponder,EmergencyResponseTeam,Location,Profile,Alert,EmergencyAction,Messages,Resource
 
 # Register your models here.
 
@@ -21,7 +21,7 @@ class EmergencyResponderAdmin(ReadOnlyModelAdmin):
     list_display = ['id','email','username','gender','date_of_birth','is_verified','specialization']
 
 @admin.register(EmergencyResponseTeam)
-class EmergencyResponseTeamAdmin(admin.ModelAdmin):
+class EmergencyResponseTeamAdmin(LeafletGeoAdmin):
 
     list_display = ['id','team_name','specialization','is_active','is_verified','created_at']
 
@@ -32,6 +32,11 @@ class LocationAdmin(LeafletGeoAdmin):
 
     list_display = ['user','point','address','country','city','state']
 
+@admin.register(AlertLocation)
+class LocationAdmin(LeafletGeoAdmin):
+
+    list_display = ['point','address','country','city','state']
+
 @admin.register(Profile)
 class ProfileAdmin(ReadOnlyModelAdmin):
 
@@ -39,7 +44,8 @@ class ProfileAdmin(ReadOnlyModelAdmin):
 
 @admin.register(Alert)
 class AlertAdmin(ReadOnlyModelAdmin):
-    list_display = ['title','description','type','severity','location']
+    list_display = ['id','type','severity','location','image']
+    
 
 @admin.register(EmergencyAction)
 class EmergencyActionAdmin(admin.ModelAdmin):
@@ -55,3 +61,8 @@ class MessagesAdmin(admin.ModelAdmin):
 class ResourceAdmin(admin.ModelAdmin):
 
     list_display = ['id','name','quantity','type','avaialable','created_at']
+    
+@admin.register(EmergencyNotification)
+class EmergencyNotificationAdmin(admin.ModelAdmin):
+    
+    list_display = ['id','alert','team','message','status','created_at']

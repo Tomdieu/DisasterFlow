@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from core.models import EmergencyResponder,EmergencyResponseTeam,Location,Profile,Alert,EmergencyAction,Messages,Resource,EmergencyNotification
+from core.models import AlertLocation,EmergencyResponder,EmergencyResponseTeam,Location,Profile,Alert,EmergencyAction,Messages,Resource,EmergencyNotification
 from rest_framework_gis.serializers import GeoFeatureModelSerializer
 
 # Serializer for Profile model
@@ -13,6 +13,14 @@ class ProfileSerializer(serializers.ModelSerializer):
 class LocationSerializer(GeoFeatureModelSerializer):
     class Meta:
         model = Location
+        geo_field = 'point'
+        fields = '__all__'
+        
+# Serializer for alert location model
+
+class AlertLocationSerializer(GeoFeatureModelSerializer):
+    class Meta:
+        model = AlertLocation
         geo_field = 'point'
         fields = '__all__'
 

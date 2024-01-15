@@ -34,15 +34,10 @@ class User(AbstractUser):
     is_emergency_responder = models.BooleanField(default=False)
     is_citizen = models.BooleanField(default=False)
 
-    # is_online = models.BooleanField(default=False)
-    # last_activity = models.DateTimeField(default=timezone.now)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
 
-    def update_last_activity(self):
-        self.last_activity = timezone.now()
-        self.save()
 
     def accept(self, visitor: Visitor):
         pass

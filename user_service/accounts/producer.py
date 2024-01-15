@@ -3,6 +3,8 @@ from typing import Any
 import pika
 import json
 
+from .models import Event
+
 from django.conf import settings
 import  logging
 
@@ -33,7 +35,7 @@ def publish(method: str, body: Any, routing_keys: list[str]):
         print(e)
 
 
-def fanout_publish(method: str, body: Any, exchange_name: str = "accounts"):
+def topic_publish(method: str, body: Any, exchange_name: str = "accounts"):
     try:
 
         credentials = pika.PlainCredentials(settings.RABBIT_MQ_USERNAME, settings.RABBIT_MQ_PASSWORD)
@@ -53,6 +55,8 @@ def fanout_publish(method: str, body: Any, exchange_name: str = "accounts"):
         properties = pika.BasicProperties(content_type=method, delivery_mode=2)
 
         body = json.dumps(data,indent=4).encode('utf-8')
+        
+        Event.objects.create(event_type=method,data=data)
 
         channel.basic_publish(exchange=exchange_name, routing_key="accounts.*", body=body,
                               properties=properties)

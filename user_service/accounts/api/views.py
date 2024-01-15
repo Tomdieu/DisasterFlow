@@ -126,7 +126,7 @@ class LoginViewSet(CreateModelMixin, GenericViewSet):
 
             token_obj, created = Token.objects.get_or_create(user=user)
 
-            return Response({"token": token_obj.key, "success": True, "data": UserSerializer(user)},
+            return Response({"token": token_obj.key, "success": True, "data": UserSerializer(user).data},
                             status=status.HTTP_200_OK)
 
         return Response({"success": False, "message": "Invalid Credentials"}, status=status.HTTP_400_BAD_REQUEST)

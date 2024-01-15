@@ -15,3 +15,4 @@ CITIZEN_DELETED = "citizen_deleted"
 
 USER_LOCATION_CREATED = "user_location_created"
 USER_LOCATION_UPDATED = "user_location_updated"
+https://meet.google.com/mgc-veob-ipc?pli=1
